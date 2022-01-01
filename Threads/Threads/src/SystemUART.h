@@ -14,17 +14,17 @@ namespace System
   class UART
   {
   private:
-    static unsigned int __uart_status__;
-    static UART *__buff__;
+    unsigned int __uart_status__;
+    UART *__buff__;
 
   protected:
-    static UART *__uart_send__(unsigned char data);
-    static UART *__uart_send__(const char *data);
-    static unsigned char __uart_receive__(void);
+    UART *__uart_send__(unsigned char data);
+    UART *__uart_send__(const char *data);
+    unsigned char __uart_receive__(void);
 
   public:
-    static void Begin(unsigned int baudRate);
-    static void Flush(void);
+    void Begin(unsigned int baudRate);
+    void Flush(void);
     friend UART &operator<<(UART &buff, const char *data);
     friend UART &operator>>(UART &buff, unsigned char data);
   };

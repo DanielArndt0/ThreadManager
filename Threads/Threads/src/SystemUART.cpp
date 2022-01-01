@@ -1,7 +1,6 @@
 #include "SystemUART.h"
 
-unsigned int System::UART::__uart_status__ = FALSE;
-System::UART *System::UART::__buff__;
+
 
 void System::UART::Begin(unsigned int baudRate)
 {

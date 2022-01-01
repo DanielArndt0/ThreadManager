@@ -12,20 +12,20 @@ subSystem::Thread::Thread()
 bool subSystem::Thread::pin(__std_thread__ *thread, const char *threadName, unsigned long loopRuntime)
 {
   if (thread == NULL)
-    return false;
+    return FALSE;
   if (!setAddress(thread))
-    return false;
+    return FALSE;
   setExecutionTime(loopRuntime);
   setName(threadName);
-  return true;
+  return TRUE;
 }
 
 bool subSystem::Thread::setAddress(__std_thread__ *address)
 {
   if (__address__ != NULL || address == NULL)
-    return false;
+    return FALSE;
   __address__ = address;
-  return true;
+  return TRUE;
 }
 
 __std_thread__ *subSystem::Thread::getAddress() const { return __address__; }
@@ -37,7 +37,7 @@ const char *subSystem::Thread::getName() const { return __name__; }
 void subSystem::Thread::setExecutionTime(unsigned long time)
 {
   if (time == 0x00)
-    __status__ = TRUE;
+    __status__ = FALSE;
   __executionTime__ = time;
 }
 
@@ -46,30 +46,30 @@ unsigned long subSystem::Thread::getExecutionTime() const { return __executionTi
 bool subSystem::Thread::run()
 {
   if (__address__ == NULL)
-    return false;
+    return FALSE;
   __status__ = TRUE;
   __address__();
-  return true;
+  return TRUE;
 }
 
 bool subSystem::Thread::pause()
 {
-  if (__status__ == TRUE)
-    return false;
+  if (__status__ == FALSE)
+    return FALSE;
   __pauseExecutionTime__ = __executionTime__;
   __executionTime__ = 0x00;
-  __status__ = TRUE;
-  return true;
+  __status__ = FALSE;
+  return TRUE;
 }
 
 bool subSystem::Thread::resume()
 {
-  if (__status__ == FALSE)
-    return false;
+  if (__status__ == TRUE)
+    return FALSE;
   __executionTime__ = __pauseExecutionTime__;
   __pauseExecutionTime__ = 0x00;
-  __status__ = FALSE;
-  return true;
+  __status__ = TRUE;
+  return TRUE;
 }
 
 bool subSystem::Thread::status() const { return __status__; }
@@ -77,11 +77,11 @@ bool subSystem::Thread::status() const { return __status__; }
 bool subSystem::Thread::_delete()
 {
   if (__address__ == NULL)
-    return false;
+    return FALSE;
   __name__ = "";
   __address__ = NULL;
   __executionTime__ = 0x00;
   __pauseExecutionTime__ = 0x00;
-  __status__ = 0x00;
-  return true;
+  __status__ = TRUE;
+  return TRUE;
 }

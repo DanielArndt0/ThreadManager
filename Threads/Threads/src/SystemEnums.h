@@ -5,7 +5,7 @@ namespace SystemEnums
 {
   enum PINMODE : unsigned int
   {
-    OUTPUT = 0x00,
-    INPUT = 0x01,
+    //OUTPUT = 0x00,
+    //INPUT = 0x01,
   };
 }

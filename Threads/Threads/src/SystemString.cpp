@@ -10,7 +10,6 @@ SystemData::Convert::Convert(int value)
   __allocated_buffer__[0x03] = ((value % E2) / E1) + ASCII_ZERO;
   __allocated_buffer__[0x04] = (value / E1) + ASCII_ZERO;
   __allocated_buffer__[0x05] = 0x00;
-  //this;
 }
 
 SystemData::Convert::~Convert()
