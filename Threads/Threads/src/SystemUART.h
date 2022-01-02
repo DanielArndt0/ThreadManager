@@ -5,9 +5,11 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "SystemMacros.h"
-#include "TIMER0.h"
+#include "SystemString.h"
 
 #define __BUFFER_SIZE__ 64
+#define cmd(comma) (char)(comma)
+#define endl cmd(0x0A) << cmd(0x0D)
 
 namespace System
 {
@@ -25,7 +27,20 @@ namespace System
   public:
     void Begin(unsigned int baudRate);
     void Flush(void);
-    friend UART &operator<<(UART &buff, const char *data);
-    friend UART &operator>>(UART &buff, unsigned char data);
+    
+    // Send
+    UART &operator<<(const char *data);
+    UART &operator<<(const SystemData::String &data);
+    UART &operator<<(char command);
+    UART &operator<<(unsigned char command);
+    UART &operator<<(int data);
+    UART &operator<<(unsigned int data);
+    UART &operator<<(long data);
+    UART &operator<<(unsigned long data);
+    UART &operator<<(float data);
+    UART &operator<<(double data);
+
+    // Receive
+    UART &operator>>(unsigned char &data);
   };
 }

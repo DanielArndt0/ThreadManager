@@ -39,6 +39,9 @@ void vTask7(void);
 void vTask8(void);
 void vTask9(void);
 
+using namespace System;
+using namespace SystemData;
+
 System::ThreadManager Manager;
 System::UART Serial;
 System::GPIO Hardware;
@@ -47,6 +50,10 @@ System::Time Clock;
 
 int main(void)
 {
+  Serial.Begin(9600);
+  Clock.Begin();
+  
+  vTask1();
   while (1);
   return 0;
 }
