@@ -34,6 +34,14 @@ void System::ThreadManager::_shift_thread_stack_(unsigned int cursor)
     __thread_stack__[i] = __thread_stack__[i + 1];
 }
 
+System::ThreadManager::~ThreadManager()
+{
+  if (__thread_stack__)
+    free(__thread_stack__);
+  if (__thread_timer_stack__)
+    free(__thread_timer_stack__);
+}
+
 bool System::ThreadManager::Begin()
 {
   if ((__thread_stack__ = (subSystem::Thread *)calloc(__thread_stack_size__, sizeof(subSystem::Thread))) == NULL)
@@ -67,6 +75,7 @@ void System::ThreadManager::xManager()
 
 bool System::ThreadManager::xCreateThread(__std_thread__ *thread, const char *threadName, unsigned long loopRuntime_ms)
 {
+  //__thread_stack__[0].error().setError();
   if (!__manager_status__ || __total_threads__ >= __thread_stack_size__)
     return FALSE;
 

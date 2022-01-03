@@ -5,8 +5,9 @@
 #include <math.h>
 #include <stdlib.h>
 #include "SystemMacros.h"
-#include "Threads.h"
+#include "SystemErrors.h"
 #include "SystemTime.h"
+#include "Threads.h"
 
 #define THIS 
 
@@ -27,6 +28,7 @@ namespace System
     static void _shift_thread_stack_(unsigned int cursor);
 
   public:
+    ~ThreadManager();
     static bool Begin();
     static void xManager();
     static bool xCreateThread(__std_thread__ *thread, const char *threadName, unsigned long loopRuntime_ms);

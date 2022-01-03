@@ -19,13 +19,41 @@ namespace SystemData
   {
   public:
     // Simple assignment
+    String &operator=(char ch);
     String &operator=(const char *cstr);
     String &operator=(const String &str);
 
-    // Concat
+    // Attach
+    String &operator+=(char ch);
+    String &operator+=(const char *cstr);
+    String &operator+=(const String &str);
 
-    // Get char at
-   unsigned char operator[](unsigned int pos);
+    // Concat
+    String &operator+(char ch);
+    String &operator+(const char *cstr);
+    String &operator+(const String &str);
+
+    // Compare
+    bool operator==(const char *cstr);
+    bool operator==(const String &str);
+
+    bool operator!=(const char *cstr);
+    bool operator!=(const String &str);
+
+    bool operator>(const char *cstr);
+    bool operator>(const String &str);
+
+    bool operator>=(const char *cstr);
+    bool operator>=(const String &str);
+
+    bool operator<(const char *cstr);
+    bool operator<(const String &str);
+
+    bool operator<=(const char *cstr);
+    bool operator<=(const String &str);
+
+    // Get char
+    char operator[](unsigned int pos);
 
   private:
     char *__allocated_buffer__;
@@ -35,16 +63,40 @@ namespace SystemData
     inline void _init_();
 
   private:
-    void _validate_(unsigned int slen, char* cstr);
-    unsigned char _alloc_(const char *cstr);
+    // Primitives
+    void _copy_to_buff_(char *cstr, unsigned int bufLen);
+    char *_alloc_(const char *cstr, unsigned int *buffLen);
+
+    String &_alloc_copy_(char ch);
+    String &_alloc_copy_(const char *cstr);
+
+    String &_alloc_attach_(char ch);
+    String &_alloc_attach_(const char *cstr);
+
+    // Operator assistant - Simple assignment
+    String &_copy_(char ch);
     String &_copy_(const char *cstr);
-    String &_copy_(const String &str);
-    void _get_char_at_(unsigned int pos);
+
+    // Operator assistant - Attach
+    String &_attach_(char ch);
+    String &_attach_(const char *cstr);
+
+    // Operator assistant - Compare
+    bool _equal_(const char *cstr);
+    bool _different_(const char *cstr);
+    bool _bigger_then_(const char *cstr);
+    bool _bigger_equal_then_(const char *cstr);
+    bool _less_than_(const char *cstr);
+    bool _less_equal_than_(const char *cstr);
+
+    // Operator assistant - Get char
+    char _get_char_at_(unsigned int pos);
 
   public:
+    // Constructors
+    String(char ch);
     String(const char *cstr = "");
     String(const String &cpy);
-    explicit String(char value, unsigned char base = 10);
     explicit String(unsigned char value, unsigned char base = 10);
     explicit String(int value, unsigned char base = 10);
     explicit String(unsigned int value, unsigned char base = 10);
@@ -55,12 +107,16 @@ namespace SystemData
     ~String(void);
 
   public:
+    // Public Functions
     const char *c_str() const;
     unsigned int length() const;
 
     // Adicionar funções de comparação
     
+
     // Adicionar funções para manipular caracteres e strings
+    char charAt(unsigned int pos);
+    bool removeChar(char ch);
 
     // Conversions
     char toChar(unsigned char base = 10);

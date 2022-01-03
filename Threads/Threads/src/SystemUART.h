@@ -8,8 +8,6 @@
 #include "SystemString.h"
 
 #define __BUFFER_SIZE__ 64
-#define cmd(comma) (char)(comma)
-#define endl cmd(0x0A) << cmd(0x0D)
 
 namespace System
 {
@@ -32,7 +30,6 @@ namespace System
     UART &operator<<(const char *data);
     UART &operator<<(const SystemData::String &data);
     UART &operator<<(char command);
-    UART &operator<<(unsigned char command);
     UART &operator<<(int data);
     UART &operator<<(unsigned int data);
     UART &operator<<(long data);

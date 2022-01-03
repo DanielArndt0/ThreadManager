@@ -85,3 +85,5 @@ bool subSystem::Thread::_delete()
   __status__ = TRUE;
   return TRUE;
 }
+
+SystemErrors::Error &subSystem::Thread::error() { return *err; }

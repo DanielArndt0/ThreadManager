@@ -15,12 +15,15 @@
 #define clear(byte, bit) ((byte) &= ~(0x01 << (bit)))
 #define check(byte, bit) ((byte) & (0x01 << (bit)))
 #define flip(byte, bit) ((byte) ^= (0x01 << (bit)))
-//#define writeRegister(byte, bit, value) ((value) == TRUE ? ((byte) |= (0x01 << (bit))) : ((byte) &= ~(0x01 << (bit))))
 #define writeRegister(byte, bit, value) ((value) == TRUE ? set((byte), (bit)) : clear((byte), (bit)))
 #define shiftRight(byte, shift) ((byte) >> shift)
 #define shiftLeft(byte, shift) ((byte) << shift)
 #define high(byte) ((byte) >> (0x08))
 #define low(byte) ((byte) & (0xFF))
+
+// Serial macros
+#define cmd(comma) (char)(comma)
+#define endl cmd(0x0A) << cmd(0x0D)
 
 // Analog-Digital
 #define ADC_VOLTAGE(x) (x * (5.0 / 1024.0))

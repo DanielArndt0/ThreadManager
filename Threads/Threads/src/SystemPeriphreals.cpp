@@ -16,11 +16,20 @@ unsigned char System::GPIO::_port_selector_(volatile unsigned char **reg, unsign
 unsigned char System::GPIO::_port_selector_(volatile unsigned char **reg, unsigned char pin)
 {
   if (pin < 8)
-    check(*reg[0], pin);
-  else if (pin >= 8 && pin < 14)
-    check(*reg[1], (pin - 8));
-  else if (pin >= 14 && pin < 20)
-    check(*reg[2], (pin - 14));
+  {
+    if (check(*reg[0], pin))
+      return 0x01;
+    else if (pin >= 8 && pin < 14)
+    {
+      if (check(*reg[1], (pin - 8)))
+        return 0x01;
+    }
+    else if (pin >= 14 && pin < 20)
+    {
+      if (check(*reg[2], (pin - 14)))
+        return 0x01;
+    }
+  }
   return FALSE;
 }
 
@@ -34,7 +43,8 @@ unsigned int System::GPIO::analogReadBits(unsigned char pin)
   ADMUX = (__aref__ << 6) | (pin & 0x07);
   writeRegister(DIDR0, pin, TRUE);
   writeRegister(ADCSRA, ADSC, TRUE);
-  while (check(ADCSRA, ADSC));
+  while (check(ADCSRA, ADSC))
+    ;
   __low__ = ADCL;
   __high__ = ADCH;
   writeRegister(DIDR0, pin, FALSE);
@@ -45,7 +55,7 @@ float System::GPIO::analogReadVolts(unsigned char pin) { return ADC_VOLTAGE(anal
 
 void System::GPIO::pinConfig(unsigned char pin, unsigned char mode)
 {
-  volatile unsigned char *reg[3] = {&PORTD, &PORTB, &PORTC};
+  volatile unsigned char *reg[3] = {&DDRD, &DDRB, &DDRC};
   _port_selector_(reg, pin, mode);
 }
 
@@ -57,6 +67,6 @@ void System::GPIO::pinWrite(unsigned char pin, unsigned char value)
 
 unsigned char System::GPIO::pinRead(unsigned char pin)
 {
-  volatile unsigned char *reg[3] = {&PORTD, &PORTB, &PORTC};
+  volatile unsigned char *reg[3] = {&PIND, &PINB, &PINC};
   return _port_selector_(reg, pin);
 }

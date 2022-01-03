@@ -5,6 +5,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "SystemMacros.h"
+#include "SystemErrors.h"
 
 typedef void __std_thread__(void);
 
@@ -17,9 +18,12 @@ namespace subSystem
     bool __status__;
 
   private:
+
     const char *__name__;
     unsigned long __executionTime__;
     __std_thread__ *__address__;
+    SystemErrors::Error *err;
+
 
   public:
     Thread();
@@ -35,5 +39,6 @@ namespace subSystem
     bool status() const;
     bool _delete();
     bool run();
+    SystemErrors::Error& error();
   };
 }

@@ -5,8 +5,8 @@
 #include "SystemMacros.h"
 #include "SystemEnums.h"
 
-#define OUTPUT 0x00
-#define INPUT 0x01
+#define OUTPUT 0x01
+#define INPUT 0x00
 
 namespace System
 {

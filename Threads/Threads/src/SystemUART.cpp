@@ -46,8 +46,6 @@ System::UART &System::UART::operator<<(const SystemData::String &data) { return 
 
 System::UART &System::UART::operator<<(char command) { return *this->__uart_send__(command); }
 
-System::UART &System::UART::operator<<(unsigned char command) { return *this->__uart_send__(command); }
-
 System::UART &System::UART::operator<<(int data) { return *this->__uart_send__(SystemData::String(data).c_str()); }
 
 System::UART &System::UART::operator<<(unsigned int data) { return *this->__uart_send__(SystemData::String(data).c_str()); }
