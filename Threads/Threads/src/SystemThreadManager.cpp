@@ -40,6 +40,7 @@ System::ThreadManager::~ThreadManager()
     free(__thread_stack__);
   if (__thread_timer_stack__)
     free(__thread_timer_stack__);
+  System::Settings::Interrupts::TIMER0()->Disable();
 }
 
 bool System::ThreadManager::Begin()
@@ -75,7 +76,6 @@ void System::ThreadManager::xManager()
 
 bool System::ThreadManager::xCreateThread(__std_thread__ *thread, const char *threadName, unsigned long loopRuntime_ms)
 {
-  //__thread_stack__[0].error().setError();
   if (!__manager_status__ || __total_threads__ >= __thread_stack_size__)
     return FALSE;
 
@@ -109,7 +109,7 @@ void System::ThreadManager::xChangeThreadRuntime(unsigned int ThreadNumber, unsi
   __thread_stack__[ThreadNumber].setExecutionTime(loopRuntime_ms);
 }
 
-void System::ThreadManager::xChangeThreadRuntime(void (*addr_Thread)(), unsigned long loopRuntime_ms) { xChangeThreadRuntime(get::xThreadNumber(addr_Thread), loopRuntime_ms); }
+void System::ThreadManager::xChangeThreadRuntime(__std_thread__ *addr_Thread, unsigned long loopRuntime_ms) { xChangeThreadRuntime(get::xThreadNumber(addr_Thread), loopRuntime_ms); }
 
 void System::ThreadManager::xChangeThreadRuntime(const char *functionName, unsigned long loopRuntime_ms) { xChangeThreadRuntime(get::xThreadNumber(functionName), loopRuntime_ms); }
 
@@ -121,7 +121,7 @@ bool System::ThreadManager::control::xRunThread(unsigned int ThreadNumber)
   return TRUE;
 }
 
-bool System::ThreadManager::control::xRunThread(void (*addr_Thread)()) { return xRunThread(get::xThreadNumber(addr_Thread)); }
+bool System::ThreadManager::control::xRunThread(__std_thread__ *addr_Thread) { return xRunThread(get::xThreadNumber(addr_Thread)); }
 
 bool System::ThreadManager::control::xRunThread(const char *functionName) { return xRunThread(get::xThreadNumber(functionName)); }
 
@@ -132,7 +132,7 @@ bool System::ThreadManager::control::xPauseThread(unsigned int ThreadNumber)
   return __thread_stack__[ThreadNumber].pause();
 }
 
-bool System::ThreadManager::control::xPauseThread(void (*addr_Thread)()) { return xPauseThread(get::xThreadNumber(addr_Thread)); }
+bool System::ThreadManager::control::xPauseThread(__std_thread__ *addr_Thread) { return xPauseThread(get::xThreadNumber(addr_Thread)); }
 
 bool System::ThreadManager::control::xPauseThread(const char *functionName) { return xPauseThread(get::xThreadNumber(functionName)); }
 
@@ -143,7 +143,7 @@ bool System::ThreadManager::control::xResumeThread(unsigned int ThreadNumber)
   return __thread_stack__[ThreadNumber].resume();
 }
 
-bool System::ThreadManager::control::xResumeThread(void (*addr_Thread)()) { return xResumeThread(get::xThreadNumber(addr_Thread)); }
+bool System::ThreadManager::control::xResumeThread(__std_thread__ *addr_Thread) { return xResumeThread(get::xThreadNumber(addr_Thread)); }
 
 bool System::ThreadManager::control::xResumeThread(const char *functionName) { return xResumeThread(get::xThreadNumber(functionName)); }
 
@@ -168,7 +168,7 @@ bool System::ThreadManager::control::xDeleteThread(unsigned int ThreadNumber)
   return TRUE;
 }
 
-bool System::ThreadManager::control::xDeleteThread(void (*addr_Thread)()) { return xDeleteThread(get::xThreadNumber(addr_Thread)); }
+bool System::ThreadManager::control::xDeleteThread(__std_thread__ *addr_Thread) { return xDeleteThread(get::xThreadNumber(addr_Thread)); }
 
 bool System::ThreadManager::control::xDeleteThread(const char *functionName) { return xDeleteThread(get::xThreadNumber(functionName)); }
 
@@ -181,7 +181,7 @@ void (*System::ThreadManager::get::xThreadAddress(unsigned int ThreadNumber))()
 
 void (*System::ThreadManager::get::xThreadAddress(const char *functionName))() { return xThreadAddress(get::xThreadNumber(functionName)); }
 
-unsigned int System::ThreadManager::get::xThreadNumber(void (*addr_Thread)())
+unsigned int System::ThreadManager::get::xThreadNumber(__std_thread__ *addr_Thread)
 {
   if (addr_Thread == NULL || !__manager_status__)
     return (pow(0x02, (sizeof(unsigned int) * 0x08)) - 0x01);
@@ -208,7 +208,7 @@ bool System::ThreadManager::get::xThreadStatus(unsigned int ThreadNumber)
   return __thread_stack__[ThreadNumber].status();
 }
 
-bool System::ThreadManager::get::xThreadStatus(void (*addr_Thread)()) { return xThreadStatus(xThreadNumber(addr_Thread)); }
+bool System::ThreadManager::get::xThreadStatus(__std_thread__ *addr_Thread) { return xThreadStatus(xThreadNumber(addr_Thread)); }
 
 bool System::ThreadManager::get::xThreadStatus(const char *functionName) { return xThreadStatus(xThreadNumber(functionName)); }
 
@@ -219,7 +219,7 @@ const char *System::ThreadManager::get::xThreadName(unsigned int ThreadNumber)
   return __thread_stack__[ThreadNumber].getName();
 }
 
-const char *System::ThreadManager::get::xThreadName(void (*addr_Thread)()) { return xThreadName(xThreadNumber(addr_Thread)); }
+const char *System::ThreadManager::get::xThreadName(__std_thread__ *addr_Thread) { return xThreadName(xThreadNumber(addr_Thread)); }
 
 const char *System::ThreadManager::get::xThreadName(const char *functionName) { return xThreadName(xThreadNumber(functionName)); }
 
@@ -230,7 +230,7 @@ unsigned long System::ThreadManager::get::xThreadRuntime(unsigned int ThreadNumb
   return __thread_stack__[ThreadNumber].getExecutionTime();
 }
 
-unsigned long System::ThreadManager::get::xThreadRuntime(void (*addr_Thread)()) { return xThreadRuntime(xThreadNumber(addr_Thread)); }
+unsigned long System::ThreadManager::get::xThreadRuntime(__std_thread__ *addr_Thread) { return xThreadRuntime(xThreadNumber(addr_Thread)); }
 
 unsigned long System::ThreadManager::get::xThreadRuntime(const char *functionName) { return xThreadRuntime(xThreadNumber(functionName)); }
 

@@ -3,7 +3,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "SystemMacros.h"
-#include "SystemEnums.h"
 
 #define OUTPUT 0x01
 #define INPUT 0x00

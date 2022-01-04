@@ -1,5 +1,4 @@
 #include "SystemMacros.h"
-#include "SystemEnums.h"
 #include "SystemInterrupt.h"
 #include "SystemErrors.h"
 #include "SystemThreadManager.h"
@@ -7,7 +6,7 @@
 #include "SystemUART.h"
 #include "SystemEEPROM.h"
 #include "SystemPeriphreals.h"
-#include "SystemString.h"
+#include "SystemTypes.h"
 
 /*
    Feitos:
@@ -19,24 +18,23 @@
    - Desenvolver Funções de Leitura analógica;
    - Adicionar Configurações de Sistema;
    - Automatizar StackThread;
-   - Desenvolver biblioteca String;
+   - Desenvolver tipo de dado String;
+   - Desenvolver tipo de dado Vector;
+
+   Em desenvolvimento:
+   - Adicionar mais funções para configurar TIMER0;
 
    Afazeres:
-   - Alterar função std_thread para retorno de erros;
-   - Analisar otimização do sistema de erros usando strings(malloc);
-   - Desalocar memória da stackThread;
-   - Desenvolver Estrutura de dados
    - Desenvolver StackBuffer Serial;
-   - Desenvolver Sistema de erros com stack trace;
+   - Desenvolver Sistema de erros com stack trace
    - Desenvolver Funções básicas de I2C;
    - Desenvolver Funções de PWM;
-   - Desenvolver programação por interrupções de hardware;
+   - Desenvolver programação por eventos de hardware;
 */
 
 #define LED 0x04
 #define BUTTON 0x06
 
-System::UART &operator<<(System::UART &uart, SystemErrors::Error &er);
 void vTask0(void);
 void vTask1(void);
 void vTask2(void);
@@ -49,7 +47,6 @@ void vTask8(void);
 void vTask9(void);
 
 using namespace System;
-using namespace SystemData;
 
 System::ThreadManager Manager;
 System::UART Serial;
@@ -62,13 +59,10 @@ int main(void)
   Serial.Begin(9600);
   Clock.Begin();
 
-  //Manager.xCreateThread(vTask1, "CtrlLeds", 1);
-
   vTask1();
 
-  while(1)
+  while (1)
   {
-
   }
 
   return 0;
@@ -76,19 +70,5 @@ int main(void)
 
 void vTask1()
 {
-  REGERR(er);
-  Serial << er << endl;
-  Hardware.pinWrite(LED, !(Hardware.pinRead(BUTTON)));
-}
-
-
-
-
-System::UART &operator<<(System::UART &uart, SystemErrors::Error &er)
-{
-  uart << "Function name: " << er.getFunction() << endl;
-  uart << "File path: " << er.getFilePath() << endl;
-  uart << "Line: " << er.getLine() << endl;
-  uart << "Date: " << er.getDate() << " - " << er.getTime() << endl;
-  return uart;
+  System::Data::Vector<subSystem::Thread> vetor;
 }

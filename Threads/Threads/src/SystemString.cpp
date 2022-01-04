@@ -3,13 +3,13 @@
 /*
  *  Private functions
  */
-void SystemData::String::_init_()
+void System::Data::String::_init_()
 {
   __allocated_buffer__ = NULL;
   __len__ = 0x00;
 }
 
-void SystemData::String::_copy_to_buff_(char *cstr, unsigned int bufLen)
+void System::Data::String::_copy_to_buff_(char *cstr, unsigned int bufLen)
 {
   if (this->__allocated_buffer__)
     free(this->__allocated_buffer__);
@@ -17,7 +17,7 @@ void SystemData::String::_copy_to_buff_(char *cstr, unsigned int bufLen)
   this->__allocated_buffer__ = cstr;
 }
 
-char *SystemData::String::_alloc_(const char *cstr, unsigned int *buffLen)
+char *System::Data::String::_alloc_(const char *cstr, unsigned int *buffLen)
 {
   *buffLen = strlen(cstr) + 1;
   char *temp = (char *)calloc(*buffLen, sizeof(char));
@@ -26,7 +26,7 @@ char *SystemData::String::_alloc_(const char *cstr, unsigned int *buffLen)
   return temp;
 }
 
-SystemData::String &SystemData::String::_alloc_copy_(char ch)
+System::Data::String &System::Data::String::_copy_(char ch)
 {
   if (ch)
   {
@@ -42,7 +42,7 @@ SystemData::String &SystemData::String::_alloc_copy_(char ch)
   return *this;
 }
 
-SystemData::String &SystemData::String::_alloc_copy_(const char *cstr)
+System::Data::String &System::Data::String::_copy_(const char *cstr)
 {
   if (cstr)
   {
@@ -56,7 +56,29 @@ SystemData::String &SystemData::String::_alloc_copy_(const char *cstr)
   }
   return *this;
 }
-SystemData::String &SystemData::String::_alloc_attach_(char ch)
+
+System::Data::String &System::Data::String::_concat_(char ch)
+{
+}
+
+System::Data::String &System::Data::String::_concat_(const char *cstr)
+{
+  if (cstr)
+  {
+    System::Data::String *newStr = (System::Data::String *)calloc(1, sizeof(System::Data::String));
+    unsigned int newLen = (strlen(this->__allocated_buffer__) + strlen(cstr)) + 1;
+    char *temp = (char *)calloc(newLen, sizeof(char));
+    if (temp == NULL)
+      return *this;
+    strcpy(temp, this->__allocated_buffer__);
+    strcat(temp, cstr);
+    *newStr = temp;
+    return *newStr;
+  }
+  return *this;
+}
+
+System::Data::String &System::Data::String::_attach_(char ch)
 {
   if (ch)
   {
@@ -75,7 +97,7 @@ SystemData::String &SystemData::String::_alloc_attach_(char ch)
   return *this;
 }
 
-SystemData::String &SystemData::String::_alloc_attach_(const char *cstr)
+System::Data::String &System::Data::String::_attach_(const char *cstr) 
 {
   if (cstr)
   {
@@ -91,15 +113,7 @@ SystemData::String &SystemData::String::_alloc_attach_(const char *cstr)
   return *this;
 }
 
-SystemData::String &SystemData::String::_copy_(char ch) { return _alloc_copy_(ch); }
-
-SystemData::String &SystemData::String::_copy_(const char *cstr) { return _alloc_copy_(cstr); }
-
-SystemData::String &SystemData::String::_attach_(char ch) { return _alloc_attach_(ch); }
-
-SystemData::String &SystemData::String::_attach_(const char *cstr) { return _alloc_attach_(cstr); }
-
-bool SystemData::String::_equal_(const char *cstr)
+bool System::Data::String::_equal_(const char *cstr) const
 {
   if (cstr)
   {
@@ -109,7 +123,7 @@ bool SystemData::String::_equal_(const char *cstr)
   return FALSE;
 }
 
-bool SystemData::String::_different_(const char *cstr)
+bool System::Data::String::_different_(const char *cstr) const
 {
   if (cstr)
   {
@@ -119,7 +133,7 @@ bool SystemData::String::_different_(const char *cstr)
   return FALSE;
 }
 
-bool SystemData::String::_bigger_then_(const char *cstr)
+bool System::Data::String::_bigger_then_(const char *cstr) const
 {
   if (cstr)
   {
@@ -129,7 +143,7 @@ bool SystemData::String::_bigger_then_(const char *cstr)
   return FALSE;
 }
 
-bool SystemData::String::_bigger_equal_then_(const char *cstr)
+bool System::Data::String::_bigger_equal_then_(const char *cstr) const
 {
   if (cstr)
   {
@@ -139,7 +153,7 @@ bool SystemData::String::_bigger_equal_then_(const char *cstr)
   return FALSE;
 }
 
-bool SystemData::String::_less_than_(const char *cstr)
+bool System::Data::String::_less_than_(const char *cstr) const
 {
   if (cstr)
   {
@@ -149,7 +163,7 @@ bool SystemData::String::_less_than_(const char *cstr)
   return FALSE;
 }
 
-bool SystemData::String::_less_equal_than_(const char *cstr)
+bool System::Data::String::_less_equal_than_(const char *cstr) const
 {
   if (cstr)
   {
@@ -159,7 +173,7 @@ bool SystemData::String::_less_equal_than_(const char *cstr)
   return FALSE;
 }
 
-char SystemData::String::_get_char_at_(unsigned int pos)
+char System::Data::String::_get_char_at_(unsigned int pos) const
 {
   if (this->__allocated_buffer__)
     return this->__allocated_buffer__[pos];
@@ -169,67 +183,67 @@ char SystemData::String::_get_char_at_(unsigned int pos)
 /*
  *  Constructors
  */
-SystemData::String::String(char ch)
+System::Data::String::String(char ch)
 {
   _init_();
   *this = ch;
 }
 
-SystemData::String::String(const char *cstr)
+System::Data::String::String(const char *cstr)
 {
   _init_();
   *this = cstr;
 }
 
-SystemData::String::String(const SystemData::String &cpy)
+System::Data::String::String(const System::Data::String &cpy)
 {
   _init_();
   *this = cpy;
 }
 
-SystemData::String::String(unsigned char value, unsigned char base)
+System::Data::String::String(unsigned char value, unsigned char base)
 {
   _init_();
   char l_buf[__BUF_SIZE__(unsigned char)];
   *this = utoa(value, l_buf, base);
 }
 
-SystemData::String::String(int value, unsigned char base)
+System::Data::String::String(int value, unsigned char base)
 {
   _init_();
   char l_buf[__BUF_SIZE__(int)];
   *this = itoa(value, l_buf, base);
 }
 
-SystemData::String::String(unsigned int value, unsigned char base)
+System::Data::String::String(unsigned int value, unsigned char base)
 {
   _init_();
   char l_buf[__BUF_SIZE__(unsigned int)];
   *this = utoa(value, l_buf, base);
 }
 
-SystemData::String::String(long value, unsigned char base)
+System::Data::String::String(long value, unsigned char base)
 {
   _init_();
   char l_buf[__BUF_SIZE__(long)];
   *this = ltoa(value, l_buf, base);
 }
 
-SystemData::String::String(unsigned long value, unsigned char base)
+System::Data::String::String(unsigned long value, unsigned char base)
 {
   _init_();
   char l_buf[__BUF_SIZE__(unsigned long)];
   *this = ultoa(value, l_buf, base);
 }
 
-SystemData::String::String(float value, unsigned char precision)
+System::Data::String::String(float value, unsigned char precision)
 {
   _init_();
   char l_buf[__BUF_SIZE__(float)];
   *this = dtostrf(value, (precision + 1), precision, l_buf);
 }
 
-SystemData::String::String(double value, unsigned char precision)
+System::Data::String::String(double value, unsigned char precision)
 {
   _init_();
   char l_buf[__BUF_SIZE__(double)];
@@ -239,7 +253,7 @@ SystemData::String::String(double value, unsigned char precision)
 /*
  *  Destructor
  */
-SystemData::String::~String(void)
+System::Data::String::~String(void)
 {
   if (__allocated_buffer__)
     free(__allocated_buffer__);
@@ -248,62 +262,62 @@ SystemData::String::~String(void)
 /*
  *  Public functions
  */
-const char *SystemData::String::c_str() const { return __allocated_buffer__; }
+const char *System::Data::String::c_str() const { return __allocated_buffer__; }
 
-unsigned int SystemData::String::length() const { return __len__ - 1; }
+unsigned int System::Data::String::length() const { return __len__ - 1; }
 
-char SystemData::String::charAt(unsigned int pos) { return _get_char_at_(pos); }
+char System::Data::String::charAt(unsigned int pos) const { return _get_char_at_(pos); }
 
-char SystemData::String::toChar(unsigned char base)
+char System::Data::String::toChar(unsigned char base)
 {
   if (this->__allocated_buffer__)
     return (char)strtol(this->__allocated_buffer__, NULL, base);
   return 0x00;
 }
 
-unsigned char SystemData::String::toUChar(unsigned char base)
+unsigned char System::Data::String::toUChar(unsigned char base)
 {
   if (this->__allocated_buffer__)
     return (unsigned char)strtoul(this->__allocated_buffer__, NULL, base);
   return 0x00;
 }
 
-int SystemData::String::toInt(unsigned char base)
+int System::Data::String::toInt(unsigned char base)
 {
   if (this->__allocated_buffer__)
     return (int)strtol(this->__allocated_buffer__, NULL, base);
   return 0x00;
 }
 
-unsigned int SystemData::String::toUInt(unsigned char base)
+unsigned int System::Data::String::toUInt(unsigned char base)
 {
   if (this->__allocated_buffer__)
     return (unsigned int)strtoul(this->__allocated_buffer__, NULL, base);
   return 0x00;
 }
 
-long SystemData::String::toLong(unsigned char base)
+long System::Data::String::toLong(unsigned char base)
 {
   if (this->__allocated_buffer__)
     return (long)atol(this->__allocated_buffer__);
   return 0x00;
 }
 
-unsigned long SystemData::String::toULong(unsigned char base)
+unsigned long System::Data::String::toULong(unsigned char base)
 {
   if (this->__allocated_buffer__)
     return (unsigned long)strtoul(this->__allocated_buffer__, NULL, base);
   return 0x00;
 }
 
-float SystemData::String::toFloat()
+float System::Data::String::toFloat()
 {
   if (this->__allocated_buffer__)
     return (float)atof(this->__allocated_buffer__);
   return 0x00;
 }
 
-double SystemData::String::toDouble()
+double System::Data::String::toDouble()
 {
   if (this->__allocated_buffer__)
     return (double)atof(this->__allocated_buffer__);
@@ -313,43 +327,47 @@ double SystemData::String::toDouble()
 /*
  * Operators
  */
-SystemData::String &SystemData::String::operator=(char ch) { return _copy_(ch); }
+System::Data::String &System::Data::String::operator=(char ch) { return _copy_(ch); }
 
-SystemData::String &SystemData::String::operator=(const char *cstr) { return _copy_(cstr); }
+System::Data::String &System::Data::String::operator=(const char *cstr) { return _copy_(cstr); }
 
-SystemData::String &SystemData::String::operator=(const SystemData::String &cpy) { return _copy_(cpy.__allocated_buffer__); }
+System::Data::String &System::Data::String::operator=(const System::Data::String &cpy) { return _copy_(cpy.__allocated_buffer__); }
 
-SystemData::String &SystemData::String::operator+=(char ch) { return _attach_(ch); }
+System::Data::String &System::Data::String::operator+(const char *cstr) { return _concat_(cstr); }
 
-SystemData::String &SystemData::String::operator+=(const char *cstr) { return _attach_(cstr); }
+System::Data::String &System::Data::String::operator+(const System::Data::String &str) { return _concat_(str.c_str()); }
 
-SystemData::String &SystemData::String::operator+=(const SystemData::String &str) { return _attach_(str.__allocated_buffer__); }
+System::Data::String &System::Data::String::operator+=(char ch) { return _attach_(ch); }
 
-bool SystemData::String::operator==(const char *cstr) { return _equal_(cstr); }
+System::Data::String &System::Data::String::operator+=(const char *cstr) { return _attach_(cstr); }
 
-bool SystemData::String::operator==(const SystemData::String &str) { return _equal_(str.__allocated_buffer__); }
+System::Data::String &System::Data::String::operator+=(const System::Data::String &str) { return _attach_(str.__allocated_buffer__); }
 
-bool SystemData::String::operator!=(const char *cstr) { return _different_(cstr); }
+bool System::Data::String::operator==(const char *cstr) { return _equal_(cstr); }
 
-bool SystemData::String::operator!=(const SystemData::String &str) { return _different_(str.__allocated_buffer__); }
+bool System::Data::String::operator==(const System::Data::String &str) { return _equal_(str.__allocated_buffer__); }
 
-bool SystemData::String::operator>(const char *cstr) { return _bigger_then_(cstr); }
+bool System::Data::String::operator!=(const char *cstr) { return _different_(cstr); }
 
-bool SystemData::String::operator>(const SystemData::String &str) { return _bigger_then_(str.__allocated_buffer__); }
+bool System::Data::String::operator!=(const System::Data::String &str) { return _different_(str.__allocated_buffer__); }
 
-bool SystemData::String::operator>=(const char *cstr) { return _bigger_equal_then_(cstr); }
+bool System::Data::String::operator>(const char *cstr) { return _bigger_then_(cstr); }
 
-bool SystemData::String::operator>=(const SystemData::String &str) { return _bigger_equal_then_(str.__allocated_buffer__); }
+bool System::Data::String::operator>(const System::Data::String &str) { return _bigger_then_(str.__allocated_buffer__); }
 
-bool SystemData::String::operator<(const char *cstr) { return _less_than_(cstr); }
+bool System::Data::String::operator>=(const char *cstr) { return _bigger_equal_then_(cstr); }
 
-bool SystemData::String::operator<(const SystemData::String &str) { return _less_than_(str.__allocated_buffer__); }
+bool System::Data::String::operator>=(const System::Data::String &str) { return _bigger_equal_then_(str.__allocated_buffer__); }
 
-bool SystemData::String::operator<=(const char *cstr) { return _less_equal_than_(cstr); }
+bool System::Data::String::operator<(const char *cstr) { return _less_than_(cstr); }
 
-bool SystemData::String::operator<=(const SystemData::String &str) { return _less_equal_than_(str.__allocated_buffer__); }
+bool System::Data::String::operator<(const System::Data::String &str) { return _less_than_(str.__allocated_buffer__); }
 
-char SystemData::String::operator[](unsigned int pos)
+bool System::Data::String::operator<=(const char *cstr) { return _less_equal_than_(cstr); }
+
+bool System::Data::String::operator<=(const System::Data::String &str) { return _less_equal_than_(str.__allocated_buffer__); }
+
+char System::Data::String::operator[](unsigned int pos)
 {
   return _get_char_at_(pos);
 }

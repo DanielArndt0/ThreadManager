@@ -4,6 +4,7 @@
 #include <avr/interrupt.h>
 #include <math.h>
 #include <stdlib.h>
+#include "SystemString.h"
 #include "SystemMacros.h"
 #include "SystemErrors.h"
 #include "SystemTime.h"
@@ -28,7 +29,8 @@ namespace System
     static void _shift_thread_stack_(unsigned int cursor);
 
   public:
-    ~ThreadManager();
+    ThreadManager(){}
+    ThreadManager(ThreadManager &cpy) = delete;
     static bool Begin();
     static void xManager();
     static bool xCreateThread(__std_thread__ *thread, const char *threadName, unsigned long loopRuntime_ms);
@@ -36,6 +38,8 @@ namespace System
     static void xChangeThreadRuntime(unsigned int ThreadNumber, unsigned long loopRuntime);
     static void xChangeThreadRuntime(__std_thread__ *addr_Thread, unsigned long loopRuntime);
     static void xChangeThreadRuntime(const char *functionName, unsigned long loopRuntime);
+    
+    ~ThreadManager();
 
   public:
     struct control

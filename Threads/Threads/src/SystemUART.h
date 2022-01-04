@@ -28,7 +28,7 @@ namespace System
     
     // Send
     UART &operator<<(const char *data);
-    UART &operator<<(const SystemData::String &data);
+    UART &operator<<(const System::Data::String &data);
     UART &operator<<(char command);
     UART &operator<<(int data);
     UART &operator<<(unsigned int data);

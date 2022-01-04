@@ -5,9 +5,8 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "SystemMacros.h"
+#include "SystemTypes.h"
 #include "SystemErrors.h"
-
-typedef void __std_thread__(void);
 
 namespace subSystem
 {
@@ -18,18 +17,15 @@ namespace subSystem
     bool __status__;
 
   private:
-
     const char *__name__;
     unsigned long __executionTime__;
     __std_thread__ *__address__;
-    SystemErrors::Error *err;
-
 
   public:
     Thread();
     bool setAddress(__std_thread__ *address);
     __std_thread__ *getAddress() const;
-    void setName(const char* name);
+    void setName(const char *name);
     const char *getName() const;
     void setExecutionTime(unsigned long time);
     unsigned long getExecutionTime() const;
@@ -39,6 +35,5 @@ namespace subSystem
     bool status() const;
     bool _delete();
     bool run();
-    SystemErrors::Error& error();
   };
 }
