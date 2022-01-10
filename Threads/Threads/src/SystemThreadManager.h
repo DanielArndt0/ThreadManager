@@ -4,13 +4,11 @@
 #include <avr/interrupt.h>
 #include <math.h>
 #include <stdlib.h>
-#include "SystemString.h"
+#include "SystemTypes.h"
 #include "SystemMacros.h"
-#include "SystemErrors.h"
 #include "SystemTime.h"
 #include "Threads.h"
-
-#define THIS 
+#include "SystemUART.h"
 
 namespace System
 {
@@ -18,10 +16,8 @@ namespace System
   {
   private:
     static bool __manager_status__;
-    static unsigned int __total_threads__;
-    static unsigned int __thread_stack_size__;
-    static unsigned long *__thread_timer_stack__;
-    static subSystem::Thread *__thread_stack__;
+    static System::Data::Vector<unsigned long> __timer_stack__;
+    static System::Data::Vector<subSystem::Thread> __thread_stack__;
 
   private:
     static bool _check_existing_address_(__std_thread__ *thread);
@@ -29,11 +25,11 @@ namespace System
     static void _shift_thread_stack_(unsigned int cursor);
 
   public:
-    ThreadManager(){}
+    ThreadManager();
     ThreadManager(ThreadManager &cpy) = delete;
-    static bool Begin();
+    static void Begin();
     static void xManager();
-    static bool xCreateThread(__std_thread__ *thread, const char *threadName, unsigned long loopRuntime_ms);
+    static bool xCreateThread(__std_thread__ *function, const char *threadName, unsigned long loopRuntime_ms);
 
     static void xChangeThreadRuntime(unsigned int ThreadNumber, unsigned long loopRuntime);
     static void xChangeThreadRuntime(__std_thread__ *addr_Thread, unsigned long loopRuntime);

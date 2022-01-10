@@ -59,10 +59,15 @@ int main(void)
   Serial.Begin(9600);
   Clock.Begin();
 
-  vTask1();
+  Manager.Begin();
+  Manager.xCreateThread(vTask1, "Teste", 1000);
+  Manager.xCreateThread(vTask2, "Te", 1000);
 
+  Serial << "Endereço task2: " << uint16_t(&vTask2) << endl;
   while (1)
   {
+    Serial << Manager.Get.xTotalThreads() << endl;
+    Clock.Pause(1000);
   }
 
   return 0;
@@ -70,5 +75,15 @@ int main(void)
 
 void vTask1()
 {
-  System::Data::Vector<subSystem::Thread> vetor;
+  Serial << "testando task1" << endl;
+}
+
+void vTask2()
+{
+  Serial << "testando task2" << endl;
+}
+
+void vTask3()
+{
+  Serial << "testando task3" << endl;
 }

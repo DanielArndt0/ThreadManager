@@ -22,17 +22,23 @@ namespace System
     public:
       // Simple assignment
       String &operator=(char ch);
+      // Simple assignment
       String &operator=(const char *cstr);
+      // Simple assignment
       String &operator=(const String &str);
 
       // Attach
       String &operator+=(char ch);
+      // Attach
       String &operator+=(const char *cstr);
+      // Attach
       String &operator+=(const String &str);
 
       // Concat
       String &operator+(char ch);
+      // Concat
       String &operator+(const char *cstr);
+      // Concat
       String &operator+(const String &str);
 
       // Compare

@@ -10,6 +10,10 @@ namespace System
     template <typename T>
     class Vector
     {
+    public:
+      T &operator=(T &data) { *this = data; }
+      T &operator[](unsigned int pos) { return __vector__[pos]; }
+
     private:
       unsigned int __vector_size__;
       unsigned int __data_amount__;
@@ -73,6 +77,13 @@ namespace System
       // Get data from vector
       T Get(unsigned int pos) const { return __vector__[pos]; }
 
+      // Sets data at vector position
+      void Set(T data, unsigned int pos)
+      {
+        if (pos < __vector_size__)
+          __vector__[pos] = data;
+      }
+
       // Add data from vector
       void Add(T data)
       {
@@ -94,12 +105,12 @@ namespace System
       }
 
       // Empty vector
-      void Empty()
+      void Clear()
       {
         if (__vector__)
         {
-          __vector_size__ = 0x00;
           __data_amount__ = 0x00;
+          __vector_size__ = 0x01;
           free(__vector__);
           _alloc_();
         }

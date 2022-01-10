@@ -9,6 +9,15 @@ subSystem::Thread::Thread()
   __status__ = TRUE;
 }
 
+subSystem::Thread::Thread(subSystem::Thread &cpy)
+{
+  __name__ = cpy.__name__;
+  __address__ = cpy.__address__;
+  __executionTime__ = cpy.__executionTime__;
+  __pauseExecutionTime__ = cpy.__pauseExecutionTime__;
+  __status__ = cpy.__status__;
+}
+
 bool subSystem::Thread::pin(__std_thread__ *thread, const char *threadName, unsigned long loopRuntime)
 {
   if (thread == NULL)

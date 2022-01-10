@@ -23,6 +23,7 @@ namespace subSystem
 
   public:
     Thread();
+    Thread(Thread& cpy);
     bool setAddress(__std_thread__ *address);
     __std_thread__ *getAddress() const;
     void setName(const char *name);
