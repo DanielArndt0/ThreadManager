@@ -9,32 +9,67 @@
 #include "SystemTypes.h"
 
 /*
-   Feitos:
-   - Desenvolver Threads;
-   - Desenvolver ThreadManager;
-   - Desenvolver Funções básicas de Tempo;
-   - Desenvolver Funções básicas de Comunicação serial;
-   - Desenvolver Funções básicas de EEPROM;
-   - Desenvolver Funções de Leitura analógica;
-   - Adicionar Configurações de Sistema;
-   - Automatizar StackThread;
-   - Desenvolver tipo de dado String;
-   - Desenvolver tipo de dado Vector;
+   Sistema:
+   - Desenvolvido sistema de Threads;
+   - Desenvolvido ThreadManager;
+   - StackThread automatizado;
+   - Configurações de Sistema adicionadas;
 
-   Em desenvolvimento:
-   - Adicionar mais funções para configurar TIMER0;
+   Periféricos:
+    - Desenvolvidas Funções básicas de Tempo;
+    - Desenvolvidas Funções básicas de Comunicação serial;
+    - Desenvolvidas Funções básicas de EEPROM;
+    - Desenvolvidas Funções de Leitura analógica;
+
+   Tipos:
+    - Desenvolvido tipo de dado String;
+    - Desenvolvido tipo de dado Vector;   -> Adicionar move constructor
+    - Desenvolvido tipo de dado Duet;
+    - Desenvolvido tipo de dado LIFO;
+
+   EEPROM:
+    - Desenvolvido funções WriteString, ReadString e outras para controle de memória.
+    - Otimizado funções da EEPROM;
 
    Afazeres:
-   - Desenvolver StackBuffer Serial;
-   - Desenvolver Sistema de erros com stack trace
-   - Desenvolver Funções básicas de I2C;
-   - Desenvolver Funções de PWM;
-   - Desenvolver programação por eventos de hardware;
+    Sistema:
+     - Organizar software no geral;
+     - Desenvolver gerenciador de memória;
+     - Desenvolver programação por eventos de hardware;
+     - Desenvolver Sistema de erros com stack trace;
+     - Remodelar classe de Threads (construtor e funções);
+
+    EEPROM:
+     - Adicionar funções para escrita de dados primitivos maiores de 1 byte;
+
+    Tipos:
+     - Organizar tipos Vector, Array , Tuple;
+     - Desenvolver tipo Tuple;
+     - Desenvolver tipo de dado Array;
+     - Desenvolver tipo de dado Map;
+     - Desenvolver tipo Typeof;
+     - Adicionar erros no Vector;
+
+    String:
+     - Desenvolver um formatador de strings;
+
+    Serial:
+     - Desenvolver StackBuffer Serial;
+
+    I2C:
+     - Desenvolver Funções básicas de I2C;
+
+    PWM:
+     - Desenvolver Funções de PWM;
+
+    Interrupções:
+     - Adicionar mais funções para configurar TIMERs;
+
 */
+using namespace System;
+using namespace Data;
 
-#define LED 0x04
-#define BUTTON 0x06
-
+void printMemoryMap(char *memMap, unsigned row);
 void vTask0(void);
 void vTask1(void);
 void vTask2(void);
@@ -46,44 +81,27 @@ void vTask7(void);
 void vTask8(void);
 void vTask9(void);
 
-using namespace System;
-
 System::ThreadManager Manager;
 System::UART Serial;
 System::GPIO Hardware;
-System::EEPROM EEprom;
+System::EEPROM Memory;
 System::Time Clock;
 
 int main(void)
 {
   Serial.Begin(9600);
   Clock.Begin();
-
-  Manager.Begin();
-  Manager.xCreateThread(vTask1, "Teste", 1000);
-  Manager.xCreateThread(vTask2, "Te", 1000);
-
-  Serial << "Endereço task2: " << uint16_t(&vTask2) << endl;
-  while (1)
-  {
-    Serial << Manager.Get.xTotalThreads() << endl;
-    Clock.Pause(1000);
-  }
-
+  
+  while (1);
   return 0;
 }
 
-void vTask1()
+void printMemoryMap(char *memMap, unsigned int row)
 {
-  Serial << "testando task1" << endl;
-}
-
-void vTask2()
-{
-  Serial << "testando task2" << endl;
-}
-
-void vTask3()
-{
-  Serial << "testando task3" << endl;
+  for (unsigned int i = 0; i < Memory.Size(); i++)
+  {
+    if (!(i % row))
+      Serial << endl;
+    Serial << memMap[i] << " ";
+  }
 }

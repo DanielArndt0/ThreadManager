@@ -42,21 +42,21 @@ System::UART *System::UART::__uart_send__(const char *data)
 
 System::UART &System::UART::operator<<(const char *data) { return *this->__uart_send__(data); }
 
-System::UART &System::UART::operator<<(const System::Data::String &data) { return *this->__uart_send__(data.c_str()); }
+System::UART &System::UART::operator<<(const System::Data::String &data) { return *this->__uart_send__(data.C_str()); }
 
 System::UART &System::UART::operator<<(char command) { return *this->__uart_send__(command); }
 
-System::UART &System::UART::operator<<(int data) { return *this->__uart_send__(System::Data::String(data).c_str()); }
+System::UART &System::UART::operator<<(int data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
 
-System::UART &System::UART::operator<<(unsigned int data) { return *this->__uart_send__(System::Data::String(data).c_str()); }
+System::UART &System::UART::operator<<(unsigned int data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
 
-System::UART &System::UART::operator<<(long data) { return *this->__uart_send__(System::Data::String(data).c_str()); }
+System::UART &System::UART::operator<<(long data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
 
-System::UART &System::UART::operator<<(unsigned long data) { return *this->__uart_send__(System::Data::String(data).c_str()); }
+System::UART &System::UART::operator<<(unsigned long data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
 
-System::UART &System::UART::operator<<(float data) { return *this->__uart_send__(System::Data::String(data).c_str()); }
+System::UART &System::UART::operator<<(float data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
 
-System::UART &System::UART::operator<<(double data) { return *this->__uart_send__(System::Data::String(data).c_str()); }
+System::UART &System::UART::operator<<(double data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
 
 /*
  *   Receiver

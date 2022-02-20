@@ -1,14 +1,14 @@
 #pragma once
 
 // System
-#define systemClock 16000000
+#define systemClock 16E6
+
+// EEPROM
+#define SIZE_EEPROM 1024
 
 // Boolean
 #define FALSE 0x00
 #define TRUE 0x01
-
-// Address 0
-//#define NULL ((void *)0)
 
 // Registers
 #define set(byte, bit) ((byte) |= (0x01 << (bit)))
