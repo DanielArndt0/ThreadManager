@@ -1,12 +1,12 @@
-#include "SystemMacros.h"
-#include "SystemInterrupt.h"
-#include "SystemErrors.h"
-#include "SystemThreadManager.h"
-#include "SystemTime.h"
-#include "SystemUART.h"
-#include "SystemEEPROM.h"
-#include "SystemPeriphreals.h"
-#include "SystemTypes.h"
+#include "Macros/SystemMacros.h"
+#include "CoadjutorSystem/CoadjutorInterrupt.h"
+#include "Errors/SystemErrors.h"
+#include "Managers/ThreadManager.h"
+#include "Time/SystemTime.h"
+#include "Com/SystemUART.h"
+#include "Memory/SystemEEPROM.h"
+#include "Peripherals/SystemPeriphreals.h"
+#include "DataTypes/SystemTypes.h"
 
 /*
    Sistema:
