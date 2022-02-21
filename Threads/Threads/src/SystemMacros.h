@@ -28,7 +28,8 @@
 // Analog-Digital
 #define ADC_VOLTAGE(x) (x * (5.0 / 1024.0))
 
-// Power
+// Math
+#define absolute(x) (x >= 0x00 ? x : (x * (-0x01)))
 #define E1 10
 #define E2 100
 #define E3 1000

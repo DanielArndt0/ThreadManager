@@ -19,12 +19,12 @@ namespace System
     class Interrupts
     {
     private:
-      static subSystem::Timer0 __timer_0__;
-      static subSystem::Timer1 __timer_1__;
+      static CoadjutorSystem::Timer0 __timer_0__;
+      static CoadjutorSystem::Timer1 __timer_1__;
 
     public:
-      static subSystem::Timer0 *TIMER0();
-      static subSystem::Timer1 *TIMER1();
+      static CoadjutorSystem::Timer0 *TIMER0();
+      static CoadjutorSystem::Timer1 *TIMER1();
     };
   }
 }

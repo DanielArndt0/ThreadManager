@@ -23,9 +23,10 @@
 
    Tipos:
     - Desenvolvido tipo de dado String;
-    - Desenvolvido tipo de dado Vector;   -> Adicionar move constructor
+    - Desenvolvido tipo de dado Vector;
     - Desenvolvido tipo de dado Duet;
     - Desenvolvido tipo de dado LIFO;
+    - Desenvolvido tipo de dado FIFO;
 
    EEPROM:
     - Desenvolvido funções WriteString, ReadString e outras para controle de memória.
@@ -43,12 +44,13 @@
      - Adicionar funções para escrita de dados primitivos maiores de 1 byte;
 
     Tipos:
-     - Organizar tipos Vector, Array , Tuple;
+     - Desenvolver função Swap.
      - Desenvolver tipo Tuple;
      - Desenvolver tipo de dado Array;
+     - Desenvolver tipo de dado List;
      - Desenvolver tipo de dado Map;
+     - Desenvolver tipo de dado Bitset;
      - Desenvolver tipo Typeof;
-     - Adicionar erros no Vector;
 
     String:
      - Desenvolver um formatador de strings;
@@ -90,8 +92,7 @@ System::Time Clock;
 int main(void)
 {
   Serial.Begin(9600);
-  Clock.Begin();
-  
+
   while (1);
   return 0;
 }

@@ -4,7 +4,7 @@
 #include <avr/interrupt.h>
 #include "SystemMacros.h"
 
-namespace subSystem
+namespace CoadjutorSystem
 {
   class TIMER
   {

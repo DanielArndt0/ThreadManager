@@ -1,4 +1,5 @@
 #pragma once
+
 #include "SystemContainers.h"
 
 namespace System
@@ -6,11 +7,11 @@ namespace System
   namespace Data
   {
     template <typename T>
-    class LIFO : public Model::Containers<T>
+    class FIFO : public Model::Containers<T>
     {
     public:
-      void operator=(LIFO &cpy) { _copy_constructor_(cpy); }
-      void operator=(LIFO &&move) { _move_constructor_(move); }
+      void operator=(FIFO &cpy) { _copy_constructor_(cpy); }
+      void operator=(FIFO &&move) { _move_constructor_(move); }
       void operator+=(T data) { _push_(data); }
       T &operator[](unsigned long pos) { return __data_struct__[pos]; }
 
@@ -30,7 +31,7 @@ namespace System
     private:
       void _alloc_() { __data_struct__ = new T[__buffer_size__]; }
 
-      void _copy_constructor_(LIFO &cpy)
+      void _copy_constructor_(FIFO &cpy)
       {
         this->__buffer_size__ = cpy.__buffer_size__;
         this->__data_amount__ = cpy.__data_amount__;
@@ -44,7 +45,7 @@ namespace System
           this->__data_struct__[i] = cpy.__data_struct__[i];
       }
 
-      void _move_constructor_(LIFO &&move)
+      void _move_constructor_(FIFO &&move)
       {
         if (this->__data_struct__)
           delete[] this->__data_struct__;
@@ -56,10 +57,16 @@ namespace System
         move.__data_struct__ = nullptr;
       }
 
-      void _relocation_copy_(T *temp)
+      // Mode -> 1 == FIFO | Mode -> 0 == LIFO.
+      void _relocation_copy_(T *temp, unsigned long mode = 0)
       {
         for (unsigned long i = 0; i < __buffer_size__; i++)
-          temp[i] = __data_struct__[i];
+        {
+          if (mode)
+            temp[i + 1] = __data_struct__[i];
+          else
+            temp[i] = __data_struct__[i + 1];
+        }
         delete[] __data_struct__;
         __data_struct__ = temp;
       }
@@ -67,7 +74,7 @@ namespace System
       void _realloc_up_()
       {
         T *temp = new T[__buffer_size__ + 0x01];
-        _relocation_copy_(temp);
+        _relocation_copy_(temp, 0x01);
         __buffer_size__ += 0x01;
         __data_amount__ += 0x01;
       }
@@ -92,8 +99,8 @@ namespace System
       {
         if (__data_struct__)
         {
-          __data_struct__[__data_amount__] = data;
           _realloc_up_();
+          __data_struct__[0] = data;
         }
       }
 
@@ -102,13 +109,10 @@ namespace System
       void _pop_()
       {
         if (__data_struct__)
-        {
-          _shift_vector_(__data_amount__ - 0x01);
           _realloc_down_();
-        }
       }
 
-      void _swap_(LIFO<T> &swap)
+      void _swap_(FIFO<T> &swap)
       {
         T *temp = this->__data_struct__;
         unsigned long vs_temp = this->__buffer_size__;
@@ -133,25 +137,25 @@ namespace System
       }
 
     public:
-      LIFO()
+      FIFO()
       {
         _init_();
         _alloc_();
       }
 
-      LIFO(LIFO &cpy)
+      FIFO(FIFO &cpy)
       {
         _init_();
         *this = cpy;
       }
 
-      LIFO(LIFO &&move)
+      FIFO(FIFO &&move)
       {
         _init_();
         *this = move;
       }
 
-      ~LIFO()
+      ~FIFO()
       {
         if (__data_struct__)
           delete[] __data_struct__;
@@ -200,19 +204,19 @@ namespace System
       void Push(T data) override { _push_(data); }
 
       /**
-       * @brief Remove the last data from the stack.
+       * @brief Remove the first data from the stack.
        */
       void Pop() { _pop_(); }
-      
+
       /**
        * @brief Swap contents.
        */
-      void Swap(LIFO<T> &swap) { _swap_(swap); }
+      void Swap(FIFO<T> &swap) { _swap_(swap); }
 
       /**
        * @brief Resets the stack, removing all data.
        */
-      void Reset() override { _reset_(); }   
+      void Reset() override { _reset_(); }
     };
   }
 }

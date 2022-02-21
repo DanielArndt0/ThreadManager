@@ -8,7 +8,7 @@
 #include "SystemTypes.h"
 #include "SystemErrors.h"
 
-namespace subSystem
+namespace CoadjutorSystem
 {
   class Thread
   {

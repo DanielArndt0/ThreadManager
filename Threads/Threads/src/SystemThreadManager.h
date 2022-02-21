@@ -19,7 +19,7 @@ namespace System
     static unsigned int __total_threads__;
     static unsigned int __thread_stack_size__;
     static unsigned long *__thread_timer_stack__;
-    static subSystem::Thread *__thread_stack__;
+    static CoadjutorSystem::Thread *__thread_stack__;
 
   private:
     static bool _check_existing_address_(__std_thread__ *thread);

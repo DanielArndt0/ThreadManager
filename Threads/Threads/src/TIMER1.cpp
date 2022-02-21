@@ -1,8 +1,8 @@
 #include "TIMER1.h"
 
-unsigned char subSystem::Timer1::__status__ = FALSE;
+unsigned char CoadjutorSystem::Timer1::__status__ = FALSE;
 
-void subSystem::Timer1::Enable()
+void CoadjutorSystem::Timer1::Enable()
 {
   writeRegister(SREG, SREG_I, FALSE);
   writeRegister(TIMSK1, TOIE1, TRUE);
@@ -13,7 +13,7 @@ void subSystem::Timer1::Enable()
   __status__ = TRUE;
 }
 
-void subSystem::Timer1::Disable()
+void CoadjutorSystem::Timer1::Disable()
 {
   writeRegister(SREG, SREG_I, FALSE);
   writeRegister(TIMSK1, TOIE1, FALSE);
@@ -21,10 +21,10 @@ void subSystem::Timer1::Disable()
   __status__ = FALSE;
 }
 
-void subSystem::Timer1::Reset()
+void CoadjutorSystem::Timer1::Reset()
 {
   TCNT1L = 0x80;
   TCNT1H = 0xC1;
 }
 
-unsigned char subSystem::Timer1::Status() { return __status__; }
+unsigned char CoadjutorSystem::Timer1::Status() { return __status__; }

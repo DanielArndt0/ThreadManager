@@ -1,6 +1,6 @@
 #include "Threads.h"
 
-subSystem::Thread::Thread()
+CoadjutorSystem::Thread::Thread()
 {
   __name__ = "";
   __address__ = NULL;
@@ -9,7 +9,7 @@ subSystem::Thread::Thread()
   __status__ = TRUE;
 }
 
-subSystem::Thread::Thread(subSystem::Thread &cpy)
+CoadjutorSystem::Thread::Thread(CoadjutorSystem::Thread &cpy)
 {
   __name__ = cpy.__name__;
   __address__ = cpy.__address__;
@@ -18,7 +18,7 @@ subSystem::Thread::Thread(subSystem::Thread &cpy)
   __status__ = cpy.__status__;
 }
 
-bool subSystem::Thread::pin(__std_thread__ *thread, const char *threadName, unsigned long loopRuntime)
+bool CoadjutorSystem::Thread::pin(__std_thread__ *thread, const char *threadName, unsigned long loopRuntime)
 {
   if (thread == NULL)
     return FALSE;
@@ -29,7 +29,7 @@ bool subSystem::Thread::pin(__std_thread__ *thread, const char *threadName, unsi
   return TRUE;
 }
 
-bool subSystem::Thread::setAddress(__std_thread__ *address)
+bool CoadjutorSystem::Thread::setAddress(__std_thread__ *address)
 {
   if (__address__ != NULL || address == NULL)
     return FALSE;
@@ -37,22 +37,22 @@ bool subSystem::Thread::setAddress(__std_thread__ *address)
   return TRUE;
 }
 
-__std_thread__ *subSystem::Thread::getAddress() const { return __address__; }
+__std_thread__ *CoadjutorSystem::Thread::getAddress() const { return __address__; }
 
-void subSystem::Thread::setName(const char *name) { __name__ = name; }
+void CoadjutorSystem::Thread::setName(const char *name) { __name__ = name; }
 
-const char *subSystem::Thread::getName() const { return __name__; }
+const char *CoadjutorSystem::Thread::getName() const { return __name__; }
 
-void subSystem::Thread::setExecutionTime(unsigned long time)
+void CoadjutorSystem::Thread::setExecutionTime(unsigned long time)
 {
   if (time == 0x00)
     __status__ = FALSE;
   __executionTime__ = time;
 }
 
-unsigned long subSystem::Thread::getExecutionTime() const { return __executionTime__; }
+unsigned long CoadjutorSystem::Thread::getExecutionTime() const { return __executionTime__; }
 
-bool subSystem::Thread::run()
+bool CoadjutorSystem::Thread::run()
 {
   if (__address__ == NULL)
     return FALSE;
@@ -61,7 +61,7 @@ bool subSystem::Thread::run()
   return TRUE;
 }
 
-bool subSystem::Thread::pause()
+bool CoadjutorSystem::Thread::pause()
 {
   if (__status__ == FALSE)
     return FALSE;
@@ -71,7 +71,7 @@ bool subSystem::Thread::pause()
   return TRUE;
 }
 
-bool subSystem::Thread::resume()
+bool CoadjutorSystem::Thread::resume()
 {
   if (__status__ == TRUE)
     return FALSE;
@@ -81,9 +81,9 @@ bool subSystem::Thread::resume()
   return TRUE;
 }
 
-bool subSystem::Thread::status() const { return __status__; }
+bool CoadjutorSystem::Thread::status() const { return __status__; }
 
-bool subSystem::Thread::_delete()
+bool CoadjutorSystem::Thread::_delete()
 {
   if (__address__ == NULL)
     return FALSE;

@@ -2,7 +2,7 @@
 
 extern unsigned long __system_tick_counter__;
 
-subSystem::Thread *System::ThreadManager::__thread_stack__ = NULL;
+CoadjutorSystem::Thread *System::ThreadManager::__thread_stack__ = NULL;
 unsigned int System::ThreadManager::__thread_stack_size__ = 0x01;
 unsigned long *System::ThreadManager::__thread_timer_stack__ = NULL;
 unsigned int System::ThreadManager::__total_threads__ = 0x00;
@@ -45,7 +45,7 @@ System::ThreadManager::~ThreadManager()
 
 bool System::ThreadManager::Begin()
 {
-  if ((__thread_stack__ = (subSystem::Thread *)calloc(__thread_stack_size__, sizeof(subSystem::Thread))) == NULL)
+  if ((__thread_stack__ = (CoadjutorSystem::Thread *)calloc(__thread_stack_size__, sizeof(CoadjutorSystem::Thread))) == NULL)
     return FALSE;
   if ((__thread_timer_stack__ = (unsigned long *)calloc(__thread_stack_size__, sizeof(unsigned long))) == NULL)
     return FALSE;
@@ -90,7 +90,7 @@ bool System::ThreadManager::xCreateThread(__std_thread__ *thread, const char *th
     return FALSE;
   __total_threads__++;
 
-  if ((__thread_stack__ = (subSystem::Thread *)realloc(__thread_stack__, (__total_threads__ + 1) * sizeof(subSystem::Thread))) == NULL)
+  if ((__thread_stack__ = (CoadjutorSystem::Thread *)realloc(__thread_stack__, (__total_threads__ + 1) * sizeof(CoadjutorSystem::Thread))) == NULL)
     return FALSE;
   __thread_stack__[__total_threads__]._delete();
 
@@ -150,7 +150,7 @@ bool System::ThreadManager::control::xDeleteThread(unsigned int ThreadNumber)
 
   _shift_thread_stack_(ThreadNumber);
 
-  if ((__thread_stack__ = (subSystem::Thread *)realloc(__thread_stack__, (__thread_stack_size__ - 1) * sizeof(subSystem::Thread))) == NULL)
+  if ((__thread_stack__ = (CoadjutorSystem::Thread *)realloc(__thread_stack__, (__thread_stack_size__ - 1) * sizeof(CoadjutorSystem::Thread))) == NULL)
     return FALSE;
 
   if ((__thread_timer_stack__ = (unsigned long *)realloc(__thread_timer_stack__, (__thread_stack_size__ - 1) * sizeof(unsigned long))) == NULL)

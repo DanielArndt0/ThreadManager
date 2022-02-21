@@ -5,7 +5,7 @@
 #include "TimersInterrupts.h"
 #include "SystemMacros.h"
 
-namespace subSystem
+namespace CoadjutorSystem
 {
   class Timer0 : public TIMER
   {
