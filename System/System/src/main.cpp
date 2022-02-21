@@ -30,6 +30,7 @@
 
    EEPROM:
     - Desenvolvido funções WriteString, ReadString e outras para controle de memória.
+    - Adicionado funções para escrita de dados primitivos maiores de 1 byte.
     - Otimizado funções da EEPROM;
 
    Afazeres:
@@ -40,17 +41,17 @@
      - Desenvolver Sistema de erros com stack trace;
      - Remodelar classe de Threads (construtor e funções);
 
-    EEPROM:
-     - Adicionar funções para escrita de dados primitivos maiores de 1 byte;
 
     Tipos:
-     - Desenvolver função Swap.
      - Desenvolver tipo Tuple;
      - Desenvolver tipo de dado Array;
      - Desenvolver tipo de dado List;
      - Desenvolver tipo de dado Map;
      - Desenvolver tipo de dado Bitset;
      - Desenvolver tipo Typeof;
+
+    EEPROM:
+     - Desenvolver sistema de partições;
 
     String:
      - Desenvolver um formatador de strings;
@@ -71,7 +72,19 @@
 using namespace System;
 using namespace Data;
 
-void printMemoryMap(char *memMap, unsigned row);
+// EEPROM Features.
+#define Atual (i)
+#define Nome(ptr) mem[ptr]
+#define Tamanho(ptr) mem[ptr + 1]
+#define Verificador(ptr) mem[ptr + mem[ptr + 1] + 2]
+#define nomeUltimo(ptr) mem[ptr + mem[ptr + 1] + 3]
+
+bool isPartition(unsigned int pos);
+void partition(unsigned char name, unsigned int pos1, unsigned int pos2);
+void readPartition();
+void printMemoryMap(unsigned char *memMap, unsigned row);
+// End EEPROM Features.
+
 void vTask0(void);
 void vTask1(void);
 void vTask2(void);
@@ -89,20 +102,69 @@ System::GPIO Hardware;
 System::EEPROM Memory;
 System::Time Clock;
 
+unsigned char uintToUchar(unsigned int c) { return c; }
+
 int main(void)
 {
   Serial.Begin(9600);
+
+  Memory.Write(41243241, 5);
+
+  Serial << Memory.ReadULong(5) << endl;
+
+  Serial << endl;
+  Serial << endl;
+  Serial << endl;
+  //printMemoryMap(Memory.Array(), 32);
 
   while (1);
   return 0;
 }
 
-void printMemoryMap(char *memMap, unsigned int row)
+bool isPartition(unsigned int pos)
 {
+}
+
+void partition(unsigned char name, unsigned int pos1, unsigned int pos2)
+{
+  if (!name && pos1 >= pos2)
+    return;
+
+  unsigned int _diff_ = pos2 - pos1;
+  unsigned int _check_digit_ = name + _diff_;
+  bool _is_upper_ = _diff_ > 255 || _check_digit_ > 255;
+  if (_is_upper_)
+  {
+    Memory.Write(name, pos1 - 3);
+    Memory.Write(0xFF, pos1 - 2);
+    Memory.Write(uintToUchar(_diff_), pos1 - 1);
+
+    Memory.Write(uintToUchar(_check_digit_), pos2);
+    Memory.Write(0xFF, pos2 + 1);
+    Memory.Write(name, pos2 + 2);
+  }
+  else
+  {
+    Memory.Write(name, pos1 - 2);
+    Memory.Write(_diff_, pos1 - 1);
+    Memory.Write(_check_digit_, pos2);
+    Memory.Write(name, pos2 + 1);
+  }
+
+  for (unsigned int i = pos1; i < pos2; i++)
+    Memory.Write((unsigned char)0x00, i);
+}
+
+void printMemoryMap(unsigned char *memMap, unsigned int row)
+{
+  unsigned int base = 15; // 15 -> for hexadecimal
   for (unsigned int i = 0; i < Memory.Size(); i++)
   {
     if (!(i % row))
       Serial << endl;
-    Serial << memMap[i] << " ";
+    if (memMap[i] > base)
+      Serial << "0x" << String((unsigned char)memMap[i], HEX) << ' ';
+    else
+      Serial << "0x0" << String((unsigned char)memMap[i], HEX) << ' ';
   }
 }
