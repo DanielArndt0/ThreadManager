@@ -33,7 +33,7 @@ unsigned char System::GPIO::_port_selector_(volatile unsigned char **reg, unsign
   return FALSE;
 }
 
-unsigned int System::GPIO::analogReadBits(unsigned char pin)
+unsigned int System::GPIO::_analog_read_(unsigned char pin)
 {
   unsigned char __low__, __high__;
   writeRegister(ADCSRA, ADEN, TRUE);
@@ -51,7 +51,9 @@ unsigned int System::GPIO::analogReadBits(unsigned char pin)
   return shiftLeft(__high__, 0x08) | __low__;
 }
 
-float System::GPIO::analogReadVolts(unsigned char pin) { return ADC_VOLTAGE(analogReadBits(pin)); }
+unsigned int System::GPIO::analogReadBits(unsigned char pin) { return _analog_read_(pin); }
+
+float System::GPIO::analogReadVolts(unsigned char pin) { return ADC_VOLTAGE(_analog_read_(pin)); }
 
 void System::GPIO::pinConfig(unsigned char pin, unsigned char mode)
 {

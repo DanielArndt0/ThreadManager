@@ -33,10 +33,7 @@ template <typename T>
 void System::EEPROM::_convert_write_(T data, unsigned int addr)
 {
   for (unsigned int i = 0x00; i < sizeof(data); i++)
-  {
     _eeprom_clear_write_(0x01, (data >> (8 * i) & 0xFF), addr + i);
-    Serial << "i: " << i << " | Data: " << System::Data::String((data >> (8 * i) & 0xFF), HEX) << " | Addr: " << addr + i << " | Addr Data:" << System::Data::String(data, HEX) << endl;
-  } 
 }
 
 void System::EEPROM::_write_string_(const char *data, unsigned int addr)
@@ -59,10 +56,7 @@ template <typename T>
 T System::EEPROM::_convert_read_(T t, unsigned int addr)
 {
   for (unsigned int i = 0x00; i < sizeof(t); i++)
-  {
     t |= (T)_read_(addr + i) << (i * 8);
-    Serial << "i: " << i << " | Data: " << System::Data::String(t, HEX) << " | Addr: " << addr + i << " | Addr Data:" << System::Data::String(_read_(addr + i), HEX) << endl;
-  }
   return t;
 }
 

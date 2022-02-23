@@ -17,6 +17,7 @@ namespace System
   private:
     static unsigned char _port_selector_(volatile unsigned char **reg, unsigned char pin, unsigned char value);
     static unsigned char _port_selector_(volatile unsigned char **reg, unsigned char pin);
+    static unsigned int _analog_read_(unsigned char pin);
 
   public:
     static unsigned int analogReadBits(unsigned char pin);
