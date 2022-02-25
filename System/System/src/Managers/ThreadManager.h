@@ -4,73 +4,108 @@
 #include <avr/interrupt.h>
 #include <math.h>
 #include <stdlib.h>
-#include "DataTypes/SystemString.h"
+#include "DataTypes/SystemTypes.h"
 #include "Macros/SystemMacros.h"
-#include "Errors/SystemErrors.h"
 #include "Time/SystemTime.h"
 #include "CoadjutorSystem/CoadjutorThreads.h"
 
 namespace System
 {
-  class ThreadManager
+  namespace Managers
   {
-  private:
-    static bool __manager_status__;
-    static unsigned int __total_threads__;
-    static unsigned int __thread_stack_size__;
-    static unsigned long *__thread_timer_stack__;
-    static CoadjutorSystem::Thread *__thread_stack__;
-
-  private:
-    static bool _check_existing_address_(__std_thread__ *thread);
-    static int _check_stack_address_();
-    static void _shift_thread_stack_(unsigned int cursor);
-
-  public:
-    ThreadManager() {}
-    ThreadManager(ThreadManager &cpy) = delete;
-    static bool Begin();
-    static void xManager();
-    static bool xCreateThread(__std_thread__ *thread, const char *threadName, unsigned long loopRuntime_ms);
-
-    static void xChangeThreadRuntime(unsigned int ThreadNumber, unsigned long loopRuntime);
-    static void xChangeThreadRuntime(__std_thread__ *addr_Thread, unsigned long loopRuntime);
-
-    ~ThreadManager();
-
-  public:
-    struct control
+    class ThreadManager
     {
-      static bool xRunThread(unsigned int ThreadNumber);
-      static bool xRunThread(__std_thread__ *addr_Thread);
+    private:
+      static unsigned char __manager_status__;
+      static Data::Vector<unsigned long> __timer_stack__;
+      static Data::Vector<CoadjutorSystem::Thread> __thread_stack__;
 
-      static bool xPauseThread(unsigned int ThreadNumber);
-      static bool xPauseThread(__std_thread__ *addr_Thread);
+    private:
+      static bool _check_existing_address_(System::StdThread *thread);
+      //----------
+      static void _begin_();
+      static bool _create_thread_(StdThread *thread, Data::String threadName, unsigned long intermittenceTime);
+      static void _manager_();
+      //----------
+      static void _enable_manager_();
+      static void _disable_manager_();
+      static void _delete_manager_();
+      //----------
+      static bool _execute_thread_(unsigned int ThreadNumber);
+      static bool _execute_thread_(StdThread *addr_Thread);
+      //----
+      static bool _pause_thread_(unsigned int ThreadNumber);
+      static bool _pause_thread_(StdThread *addr_Thread);
+      //----
+      static bool _resume_thread_(unsigned int ThreadNumber);
+      static bool _resume_thread_(StdThread *addr_Thread);
+      //----
+      static bool _delete_thread_(unsigned int ThreadNumber);
+      static bool _delete_thread_(StdThread *addr_Thread);
+      //----
+      static bool _change_intermittence_time_(unsigned int ThreadNumber, unsigned long intermittenceTime);
+      static bool _change_intermittence_time_(StdThread *addr_Thread, unsigned long intermittenceTime);
+      //----------
+      static StdThread *_get_thread_addr_(unsigned int ThreadNumber);
+      static int _get_thread_number_(StdThread *addr_Thread);
+      //----
+      static bool _get_thread_status_(unsigned int ThreadNumber);
+      static bool _get_thread_status_(StdThread *addr_Thread);
+      //----
+      static Data::String _get_thread_name_(unsigned int ThreadNumber);
+      static Data::String _get_thread_name_(StdThread *addr_Thread);
+      //----
+      static unsigned long _get_intermittence_time_(unsigned int ThreadNumber);
+      static unsigned long _get_intermittence_time_(StdThread *addr_Thread);
+      //----
+      static unsigned char _get_manager_status_();
+      static unsigned int _get_total_threads_();
+      //----------
 
-      static bool xResumeThread(unsigned int ThreadNumber);
-      static bool xResumeThread(__std_thread__ *addr_Thread);
+    public:
+      ThreadManager();
+      ThreadManager(ThreadManager &cpy) = delete;
+      ThreadManager(ThreadManager &&move) = delete;
+      ~ThreadManager();
 
-      static bool xDeleteThread(unsigned int ThreadNumber);
-      static bool xDeleteThread(__std_thread__ *addr_Thread);
-    } Control;
+    public:
+      static void Begin();
+      static bool Create(StdThread *thread, Data::String threadName, unsigned long intermittenceTime);
+      static void Manager();
+      static void EnableManager();
+      static void DisableManager();
+      static void DeleteManager();
 
-    struct get
-    {
-      static __std_thread__ *xThreadAddress(unsigned int ThreadNumber);
+    public:
+      static bool Execute(unsigned int ThreadNumber);
+      static bool Execute(StdThread *addr_Thread);
 
-      static unsigned int xThreadNumber(__std_thread__ *addr_Thread);
+      static bool Pause(unsigned int ThreadNumber);
+      static bool Pause(StdThread *addr_Thread);
 
-      static bool xThreadStatus(unsigned int ThreadNumber);
-      static bool xThreadStatus(__std_thread__ *addr_Thread);
+      static bool Resume(unsigned int ThreadNumber);
+      static bool Resume(StdThread *addr_Thread);
 
-      static const char *xThreadName(unsigned int ThreadNumber);
-      static const char *xThreadName(__std_thread__ *addr_Thread);
+      static bool Delete(unsigned int ThreadNumber);
+      static bool Delete(StdThread *addr_Thread);
 
-      static unsigned long xThreadRuntime(unsigned int ThreadNumber);
-      static unsigned long xThreadRuntime(__std_thread__ *addr_Thread);
+      static void changeTime(unsigned int ThreadNumber, unsigned long intermittenceTime);
+      static void changeTime(StdThread *addr_Thread, unsigned long intermittenceTime);
 
-      static unsigned int xTotalThreads();
-      static unsigned int xStackSpace();
-    } Get;
-  };
+      static StdThread *getAddress(unsigned int ThreadNumber);
+      static int getNumber(StdThread *addr_Thread);
+
+      static bool getThreadStatus(unsigned int ThreadNumber);
+      static bool getThreadStatus(StdThread *addr_Thread);
+
+      static Data::String getName(unsigned int ThreadNumber);
+      static Data::String getName(StdThread *addr_Thread);
+
+      static unsigned long getTime(unsigned int ThreadNumber);
+      static unsigned long getTime(StdThread *addr_Thread);
+
+      static unsigned char getManagerStatus();
+      static unsigned int getTotalThreads();
+    };
+  }
 }

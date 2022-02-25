@@ -1,41 +1,41 @@
 #pragma once
 
 // System
-#define systemClock 16E6
+#define __SYSTEM_CLOCK 16E6
 
 // EEPROM
-#define SIZE_EEPROM 1024
+#define __EEPROM_SIZE 0x400
 
-// Boolean
-#define FALSE 0x00
-#define TRUE 0x01
+// SRAM
+#define __START_ADDR_SRAM 0x0100
+#define __END_ADDR_SRAM 0x08FF
+
+// Addressing
+#define __OFFSET (0x20)
+#define __MEMIO_ADDR(addr) (*(volatile unsigned char *)(addr))
+#define __IO_ADDR(addr) (*((volatile unsigned char *)(addr) + __OFFSET))
 
 // Registers
-#define set(byte, bit) ((byte) |= (0x01 << (bit)))
-#define clear(byte, bit) ((byte) &= ~(0x01 << (bit)))
-#define check(byte, bit) ((byte) & (0x01 << (bit)))
-#define flip(byte, bit) ((byte) ^= (0x01 << (bit)))
-#define writeRegister(byte, bit, value) ((value) == TRUE ? set((byte), (bit)) : clear((byte), (bit)))
-#define shiftRight(byte, shift) ((byte) >> shift)
-#define shiftLeft(byte, shift) ((byte) << shift)
-#define high(byte) ((byte) >> (0x08))
-#define low(byte) ((byte) & (0xFF))
+#define __SET(byte, bit) ((byte) |= (0x01 << (bit)))
+#define __CLEAR(byte, bit) ((byte) &= ~(0x01 << (bit)))
+#define __CHECK(byte, bit) ((byte) & (0x01 << (bit)))
+#define __FLIP(byte, bit) ((byte) ^= (0x01 << (bit)))
+#define __WRITE_REG(byte, bit, value) ((value) == __TRUE ? __SET((byte), (bit)) : __CLEAR((byte), (bit)))
+#define __SHIFTR(byte, shift) ((byte) >> shift)
+#define __SHIFTL(byte, shift) ((byte) << shift)
+#define __HIGH(byte) ((byte) >> (0x08))
+#define __LOW(byte) ((byte) & (0xFF))
+
+// Analog-Digital
+#define __ADC_VOLTAGE(x) (x * (5.0 / 1024.0))
+
+// Math
+#define __ABSOLUTE(x) (x >= 0x00 ? x : (x * (-0x01)))
+
+// Boolean
+#define __FALSE 0x00
+#define __TRUE 0x01
 
 // Serial macros
 #define cmd(comma) (char)(comma)
 #define endl cmd(0x0A) << cmd(0x0D)
-
-// Analog-Digital
-#define ADC_VOLTAGE(x) (x * (5.0 / 1024.0))
-
-// Math
-#define absolute(x) (x >= 0x00 ? x : (x * (-0x01)))
-#define E1 10
-#define E2 100
-#define E3 1000
-#define E4 10000
-#define E5 100000
-#define E6 1000000
-#define E7 10000000
-#define E8 100000000
-#define E9 1000000000

@@ -2,14 +2,13 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "CoadjutorSystem/CoadjutorContainers.h"
 
 namespace System
 {
   namespace Data
   {
     template <typename T>
-    class Vector : public Model::Containers<T>
+    class Vector
     {
     public:
       void operator=(Vector &cpy) { _copy_constructor_(cpy); }
@@ -140,7 +139,6 @@ namespace System
           _alloc_();
         }
       }
-      
 
     public:
       Vector()
@@ -171,36 +169,36 @@ namespace System
       /**
        * @return Returns the number of bytes allocated in the vector.
        */
-      size_t Bytes() const override { return sizeof(T) * __buffer_size__; }
+      size_t Bytes() const { return sizeof(T) * __buffer_size__; }
 
       /**
        * @return Returns the amount of data stored in the vector.
        */
-      unsigned long Size() const override { return __data_amount__; }
+      unsigned long Size() const { return __data_amount__; }
 
       /**
        * @brief Check if the vector is empty.
        *
        * @return Returns true if empty. Otherwise, it will return false.
        */
-      bool Empty() const override { return __data_amount__ < 0x01 ? true : false; }
+      bool Empty() const { return __data_amount__ < 0x01 ? true : false; }
 
       /**
        * @return Returns the first element.
        */
-      T First() const override { return _get_(0); }
+      T First() const { return _get_(0); }
 
       /**
        * @return Returns the last element.
        */
-      T Last() const override { return _get_(__data_amount__ - 0x01); }
+      T Last() const { return _get_(__data_amount__ - 0x01); }
 
       /**
        * @brief Returns the data stored in the vector position.
        *
        * @param pos Position in vector.
        */
-      T At(unsigned long pos) const override { return _get_(pos); }
+      T At(unsigned long pos) const { return _get_(pos); }
 
       /**
        * @brief Set the data to an existing vector position.
@@ -216,7 +214,7 @@ namespace System
        *
        * @param data Given to be written.
        */
-      void Push(T data) override { _add_(data); }
+      void Push(T data) { _add_(data); }
 
       /**
        * @brief Removes the data in the last position of the vector.
@@ -228,7 +226,7 @@ namespace System
        *
        * @param pos Position in vector.
        */
-      void PopMid(unsigned long pos) { _remove_(pos); }
+      void Pop(unsigned long pos) { _remove_(pos); }
 
       /**
        * @brief Swap contents.
@@ -238,7 +236,7 @@ namespace System
       /**
        * @brief Resets the vector, removing all data.
        */
-      void Reset() override { _reset_(); }
+      void Reset() { _reset_(); }
     };
   }
 }

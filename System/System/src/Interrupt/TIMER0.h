@@ -16,6 +16,6 @@ namespace CoadjutorSystem
     void Enable() override;
     void Disable() override;
     void Reset() override;
-    unsigned char Status() override;
+    unsigned char &Status() override;
   };
 }

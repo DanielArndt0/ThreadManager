@@ -1,37 +1,37 @@
 #include "Com/SystemUART.h"
 
-void System::UART::Begin(unsigned int baudRate)
+void System::Com::UART::Begin(unsigned int baudRate)
 {
-  unsigned int __ubrr__ = (systemClock / 0x08 / baudRate) - 0x01;
-  UBRR0H = (unsigned char)high(__ubrr__);
+  unsigned int __ubrr__ = (__SYSTEM_CLOCK / 0x08 / baudRate) - 0x01;
+  UBRR0H = (unsigned char)__HIGH(__ubrr__);
   UBRR0L = (unsigned char)__ubrr__;
-  writeRegister(UCSR0A, U2X0, TRUE);
-  writeRegister(UCSR0B, RXEN0, TRUE);
-  writeRegister(UCSR0B, TXEN0, TRUE);
-  writeRegister(UCSR0B, UCSZ02, FALSE);
-  writeRegister(UCSR0C, USBS0, FALSE);
-  __uart_status__ = TRUE;
+  __WRITE_REG(UCSR0A, U2X0, __TRUE);
+  __WRITE_REG(UCSR0B, RXEN0, __TRUE);
+  __WRITE_REG(UCSR0B, TXEN0, __TRUE);
+  __WRITE_REG(UCSR0B, UCSZ02, __FALSE);
+  __WRITE_REG(UCSR0C, USBS0, __FALSE);
+  __uart_status__ = __TRUE;
 }
 
 /*
  *   Sender
  */
 
-System::UART *System::UART::__uart_send__(unsigned char data)
+System::Com::UART *System::Com::UART::__uart_send__(unsigned char data)
 {
-  if (__uart_status__ == FALSE)
+  if (__uart_status__ == __FALSE)
     return this;
-  while (!(check(UCSR0A, UDRE0)));
+  while (!(__CHECK(UCSR0A, UDRE0)));
   UDR0 = data;
-  while (!(check(UCSR0A, TXC0)));
+  while (!(__CHECK(UCSR0A, TXC0)));
   return this;
 }
 
-System::UART *System::UART::__uart_send__(const char *data)
+System::Com::UART *System::Com::UART::__uart_send__(const char *data)
 {
   if (data)
   {
-    if (__uart_status__ == FALSE)
+    if (__uart_status__ == __FALSE)
       return this;
     for (register unsigned int i = 0x00; i < (unsigned int)strlen(data); i++)
       __uart_send__(data[i]);
@@ -40,43 +40,43 @@ System::UART *System::UART::__uart_send__(const char *data)
   return this;
 }
 
-System::UART &System::UART::operator<<(const char *data) { return *this->__uart_send__(data); }
+System::Com::UART &System::Com::UART::operator<<(const char *data) { return *this->__uart_send__(data); }
 
-System::UART &System::UART::operator<<(const System::Data::String &data) { return *this->__uart_send__(data.C_str()); }
+System::Com::UART &System::Com::UART::operator<<(const System::Data::String &data) { return *this->__uart_send__(data.C_str()); }
 
-System::UART &System::UART::operator<<(char command) { return *this->__uart_send__(command); }
+System::Com::UART &System::Com::UART::operator<<(char command) { return *this->__uart_send__(command); }
 
-System::UART &System::UART::operator<<(int data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
+System::Com::UART &System::Com::UART::operator<<(int data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
 
-System::UART &System::UART::operator<<(unsigned int data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
+System::Com::UART &System::Com::UART::operator<<(unsigned int data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
 
-System::UART &System::UART::operator<<(long data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
+System::Com::UART &System::Com::UART::operator<<(long data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
 
-System::UART &System::UART::operator<<(unsigned long data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
+System::Com::UART &System::Com::UART::operator<<(unsigned long data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
 
-System::UART &System::UART::operator<<(float data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
+System::Com::UART &System::Com::UART::operator<<(float data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
 
-System::UART &System::UART::operator<<(double data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
+System::Com::UART &System::Com::UART::operator<<(double data) { return *this->__uart_send__(System::Data::String(data).C_str()); }
 
 /*
  *   Receiver
  */
-unsigned char System::UART::__uart_receive__()
+unsigned char System::Com::UART::__uart_receive__()
 {
-  if (__uart_status__ == FALSE)
+  if (__uart_status__ == __FALSE)
     return 0x00;
-  while (!(check(UCSR0A, RXC0)));
-  if (check(UCSR0A, DOR0) || check(UCSR0A, FE0))
+  while (!(__CHECK(UCSR0A, RXC0)));
+  if (__CHECK(UCSR0A, DOR0) || __CHECK(UCSR0A, FE0))
   {
     UDR0;
-    writeRegister(UCSR0B, RXEN0, FALSE);
-    writeRegister(UCSR0B, RXEN0, TRUE);
+    __WRITE_REG(UCSR0B, RXEN0, __FALSE);
+    __WRITE_REG(UCSR0B, RXEN0, __TRUE);
     return 0x00;
   }
   return UDR0;
 }
 
-System::UART &System::UART::operator>>(unsigned char &data)
+System::Com::UART &System::Com::UART::operator>>(unsigned char &data)
 {
   data = __uart_receive__();
   return *this;
@@ -85,10 +85,10 @@ System::UART &System::UART::operator>>(unsigned char &data)
 /*
  *   Flush RX buffer
  */
-void System::UART::Flush(void)
+void System::Com::UART::Flush(void)
 {
   unsigned char f = 0x00;
-  while (check(UCSR0A, RXC0))
+  while (__CHECK(UCSR0A, RXC0))
     if (!f)
       f = UDR0;
 }

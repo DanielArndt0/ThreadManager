@@ -6,9 +6,9 @@ void System::Time::Begin() { System::Settings::Interrupts::TIMER1()->Enable(); }
 
 unsigned long System::Time::Ticks()
 {
-  writeRegister(SREG, SREG_I, FALSE);
+  __WRITE_REG(SREG, SREG_I, __FALSE);
   unsigned long t = __system_tick_counter__;
-  writeRegister(SREG, SREG_I, TRUE);
+  __WRITE_REG(SREG, SREG_I, __TRUE);
   return t;
 }
 

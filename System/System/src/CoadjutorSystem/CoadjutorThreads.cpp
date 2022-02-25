@@ -1,96 +1,115 @@
 #include "CoadjutorSystem/CoadjutorThreads.h"
 
-CoadjutorSystem::Thread::Thread()
-{
-  __name__ = "";
-  __address__ = NULL;
-  __executionTime__ = 0x00;
-  __pauseExecutionTime__ = 0x00;
-  __status__ = TRUE;
-}
-
-CoadjutorSystem::Thread::Thread(CoadjutorSystem::Thread &cpy)
+void CoadjutorSystem::Thread::operator=(CoadjutorSystem::Thread &cpy)
 {
   __name__ = cpy.__name__;
   __address__ = cpy.__address__;
-  __executionTime__ = cpy.__executionTime__;
-  __pauseExecutionTime__ = cpy.__pauseExecutionTime__;
+  __intermittenceTime__ = cpy.__intermittenceTime__;
+  __pauseIntermittenceTime__ = cpy.__pauseIntermittenceTime__;
   __status__ = cpy.__status__;
 }
 
-bool CoadjutorSystem::Thread::pin(__std_thread__ *thread, const char *threadName, unsigned long loopRuntime)
+void CoadjutorSystem::Thread::operator=(CoadjutorSystem::Thread &&move)
 {
-  if (thread == NULL)
-    return FALSE;
-  if (!setAddress(thread))
-    return FALSE;
-  setExecutionTime(loopRuntime);
-  setName(threadName);
-  return TRUE;
+  __name__ = move.__name__;
+  __address__ = move.__address__;
+  __intermittenceTime__ = move.__intermittenceTime__;
+  __pauseIntermittenceTime__ = move.__pauseIntermittenceTime__;
+  __status__ = move.__status__;
 }
 
-bool CoadjutorSystem::Thread::setAddress(__std_thread__ *address)
+void CoadjutorSystem::Thread::_set_name_(System::Data::String name) { __name__ = name; }
+
+void CoadjutorSystem::Thread::_set_intermittence_time_(unsigned long intermittenceTime)
+{
+  if (intermittenceTime == 0x00)
+    __status__ = __FALSE;
+  __intermittenceTime__ = intermittenceTime;
+}
+
+bool CoadjutorSystem::Thread::_set_address_(System::StdThread *address)
 {
   if (__address__ != NULL || address == NULL)
-    return FALSE;
+    return __FALSE;
   __address__ = address;
-  return TRUE;
+  return __TRUE;
 }
 
-__std_thread__ *CoadjutorSystem::Thread::getAddress() const { return __address__; }
+System::Data::String CoadjutorSystem::Thread::_get_name_() const { return __name__; }
 
-void CoadjutorSystem::Thread::setName(const char *name) { __name__ = name; }
+unsigned long CoadjutorSystem::Thread::_get_intermittence_time_() const { return __intermittenceTime__; }
 
-const char *CoadjutorSystem::Thread::getName() const { return __name__; }
+System::StdThread *CoadjutorSystem::Thread::_get_address_() const { return __address__; }
 
-void CoadjutorSystem::Thread::setExecutionTime(unsigned long time)
-{
-  if (time == 0x00)
-    __status__ = FALSE;
-  __executionTime__ = time;
-}
+bool CoadjutorSystem::Thread::_get_status_() const { return __status__; }
 
-unsigned long CoadjutorSystem::Thread::getExecutionTime() const { return __executionTime__; }
-
-bool CoadjutorSystem::Thread::run()
+bool CoadjutorSystem::Thread::_run_()
 {
   if (__address__ == NULL)
-    return FALSE;
-  __status__ = TRUE;
+    return __FALSE;
+  __status__ = __TRUE;
   __address__();
-  return TRUE;
+  return __TRUE;
 }
 
-bool CoadjutorSystem::Thread::pause()
+bool CoadjutorSystem::Thread::_pause_()
 {
-  if (__status__ == FALSE)
-    return FALSE;
-  __pauseExecutionTime__ = __executionTime__;
-  __executionTime__ = 0x00;
-  __status__ = FALSE;
-  return TRUE;
+  if (__status__ == __FALSE)
+    return __FALSE;
+  __pauseIntermittenceTime__ = __intermittenceTime__;
+  __intermittenceTime__ = 0x00;
+  __status__ = __FALSE;
+  return __TRUE;
 }
 
-bool CoadjutorSystem::Thread::resume()
+bool CoadjutorSystem::Thread::_resume_()
 {
-  if (__status__ == TRUE)
-    return FALSE;
-  __executionTime__ = __pauseExecutionTime__;
-  __pauseExecutionTime__ = 0x00;
-  __status__ = TRUE;
-  return TRUE;
+  if (__status__ == __TRUE)
+    return __FALSE;
+  __intermittenceTime__ = __pauseIntermittenceTime__;
+  __pauseIntermittenceTime__ = 0x00;
+  __status__ = __TRUE;
+  return __TRUE;
 }
 
-bool CoadjutorSystem::Thread::status() const { return __status__; }
-
-bool CoadjutorSystem::Thread::_delete()
+bool CoadjutorSystem::Thread::_delete_()
 {
   if (__address__ == NULL)
-    return FALSE;
+    return __FALSE;
   __name__ = "";
   __address__ = NULL;
-  __executionTime__ = 0x00;
-  __pauseExecutionTime__ = 0x00;
-  __status__ = TRUE;
-  return TRUE;
+  __intermittenceTime__ = 0x00;
+  __pauseIntermittenceTime__ = 0x00;
+  __status__ = __FALSE;
+  return __TRUE;
 }
+
+CoadjutorSystem::Thread::Thread() {}
+
+CoadjutorSystem::Thread::Thread(System::StdThread *thread, System::Data::String threadName, unsigned long intermittenceTime) : __address__(thread), __name__(threadName), __intermittenceTime__(intermittenceTime) {}
+
+CoadjutorSystem::Thread::Thread(CoadjutorSystem::Thread &cpy) { *this = cpy; }
+
+CoadjutorSystem::Thread::Thread(CoadjutorSystem::Thread &&move) { *this = move; }
+
+void CoadjutorSystem::Thread::setName(System::Data::String name) { _set_name_(name); }
+
+void CoadjutorSystem::Thread::setIntermittenceTime(unsigned long intermittenceTime) { _set_intermittence_time_(intermittenceTime); }
+
+bool CoadjutorSystem::Thread::setAddress(System::StdThread *address) { return _set_address_(address); }
+
+System::Data::String CoadjutorSystem::Thread::getName() const { return _get_name_(); }
+
+unsigned long CoadjutorSystem::Thread::getIntermittenceTime() const { return _get_intermittence_time_(); }
+
+System::StdThread *CoadjutorSystem::Thread::getAddress() const { return _get_address_(); }
+
+bool CoadjutorSystem::Thread::getStatus() const { return _get_status_(); }
+
+bool CoadjutorSystem::Thread::Run() { return _run_(); }
+
+bool CoadjutorSystem::Thread::Pause() { return _pause_(); }
+
+bool CoadjutorSystem::Thread::Resume() { return _resume_(); }
+
+bool CoadjutorSystem::Thread::Delete() { return _delete_(); }

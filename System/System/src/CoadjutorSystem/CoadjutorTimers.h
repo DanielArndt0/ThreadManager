@@ -12,6 +12,6 @@ namespace CoadjutorSystem
     virtual void Enable() = 0;
     virtual void Disable() = 0;
     virtual void Reset() = 0;
-    virtual unsigned char Status() = 0;
+    virtual unsigned char &Status() = 0;
   };
 }

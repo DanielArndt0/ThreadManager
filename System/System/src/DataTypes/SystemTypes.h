@@ -6,4 +6,7 @@
 #include "DataTypes/SystemLIFO.h"
 #include "DataTypes/SystemFIFO.h"
 
-typedef void __std_thread__(void);
+namespace System
+{
+  typedef void StdThread(void);
+}

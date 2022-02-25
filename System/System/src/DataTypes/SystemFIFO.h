@@ -1,12 +1,11 @@
 #pragma once
-#include "CoadjutorSystem/CoadjutorContainers.h"
 
 namespace System
 {
   namespace Data
   {
     template <typename T>
-    class FIFO : public Model::Containers<T>
+    class FIFO
     {
     public:
       void operator=(FIFO &cpy) { _copy_constructor_(cpy); }
@@ -164,43 +163,43 @@ namespace System
       /**
        * @return Returns the number of bytes allocated on the stack.
        */
-      size_t Bytes() const override { return sizeof(T) * __buffer_size__; }
+      size_t Bytes() const { return sizeof(T) * __buffer_size__; }
 
       /**
        * @brief Returns an amount of data added to the stack.
        */
-      unsigned long Size() const override { return __data_amount__; }
+      unsigned long Size() const { return __data_amount__; }
 
       /**
        * @brief Check if the stack is empty.
        *
        * @return Returns true if empty. Otherwise, it will return false.
        */
-      bool Empty() const override { return __data_amount__ < 0x01 ? true : false; }
+      bool Empty() const { return __data_amount__ < 0x01 ? true : false; }
 
       /**
        * @return Returns the first stack data.
        */
-      T First() const override { return _get_(0); }
+      T First() const { return _get_(0); }
 
       /**
        * @return Returns the last stack data.
        */
-      T Last() const override { return _get_(__data_amount__ - 0x01); }
+      T Last() const { return _get_(__data_amount__ - 0x01); }
 
       /**
        * @param pos Stack position.
        *
        * @return Returns data at the given stack position.
        */
-      T At(unsigned long pos) const override { return _get_(pos); }
+      T At(unsigned long pos) const { return _get_(pos); }
 
       /**
        * @brief Insert data into stack.
        *
        * @param data Data to be entered.
        */
-      void Push(T data) override { _push_(data); }
+      void Push(T data) { _push_(data); }
 
       /**
        * @brief Remove the first data from the stack.
@@ -215,7 +214,7 @@ namespace System
       /**
        * @brief Resets the stack, removing all data.
        */
-      void Reset() override { _reset_(); }
+      void Reset() { _reset_(); }
     };
   }
 }
