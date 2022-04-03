@@ -5,11 +5,11 @@ namespace System
   namespace Data
   {
     template <typename T>
-    class LIFO
+    class LiFo
     {
     public:
-      void operator=(LIFO &cpy) { _copy_constructor_(cpy); }
-      void operator=(LIFO &&move) { _move_constructor_(move); }
+      void operator=(LiFo &cpy) { _copy_constructor_(cpy); }
+      void operator=(LiFo &&move) { _move_constructor_(move); }
       void operator+=(T data) { _push_(data); }
       T &operator[](unsigned long pos) { return __data_struct__[pos]; }
 
@@ -29,7 +29,7 @@ namespace System
     private:
       void _alloc_() { __data_struct__ = new T[__buffer_size__]; }
 
-      void _copy_constructor_(LIFO &cpy)
+      void _copy_constructor_(LiFo &cpy)
       {
         this->__buffer_size__ = cpy.__buffer_size__;
         this->__data_amount__ = cpy.__data_amount__;
@@ -43,7 +43,7 @@ namespace System
           this->__data_struct__[i] = cpy.__data_struct__[i];
       }
 
-      void _move_constructor_(LIFO &&move)
+      void _move_constructor_(LiFo &&move)
       {
         if (this->__data_struct__)
           delete[] this->__data_struct__;
@@ -107,7 +107,7 @@ namespace System
         }
       }
 
-      void _swap_(LIFO<T> &swap)
+      void _swap_(LiFo<T> &swap)
       {
         T *temp = this->__data_struct__;
         unsigned long vs_temp = this->__buffer_size__;
@@ -132,25 +132,25 @@ namespace System
       }
 
     public:
-      LIFO()
+      LiFo()
       {
         _init_();
         _alloc_();
       }
 
-      LIFO(LIFO &cpy)
+      LiFo(LiFo &cpy)
       {
         _init_();
         *this = cpy;
       }
 
-      LIFO(LIFO &&move)
+      LiFo(LiFo &&move)
       {
         _init_();
         *this = move;
       }
 
-      ~LIFO()
+      ~LiFo()
       {
         if (__data_struct__)
           delete[] __data_struct__;
@@ -206,7 +206,7 @@ namespace System
       /**
        * @brief Swap contents.
        */
-      void Swap(LIFO<T> &swap) { _swap_(swap); }
+      void Swap(LiFo<T> &swap) { _swap_(swap); }
 
       /**
        * @brief Resets the stack, removing all data.

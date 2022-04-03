@@ -60,7 +60,7 @@
 
 namespace System
 {
-  namespace Addon
+  namespace Addons
   {
     class EEPartition
     {

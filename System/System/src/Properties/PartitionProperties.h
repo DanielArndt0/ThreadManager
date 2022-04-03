@@ -21,7 +21,6 @@ namespace System
       unsigned long getSize();
       unsigned long getStartAddr();
       unsigned long getEndAddr();
-      unsigned char *getData();
     };
   }
 }

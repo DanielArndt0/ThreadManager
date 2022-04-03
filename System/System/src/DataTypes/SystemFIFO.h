@@ -5,11 +5,11 @@ namespace System
   namespace Data
   {
     template <typename T>
-    class FIFO
+    class FiFo
     {
     public:
-      void operator=(FIFO &cpy) { _copy_constructor_(cpy); }
-      void operator=(FIFO &&move) { _move_constructor_(move); }
+      void operator=(FiFo &cpy) { _copy_constructor_(cpy); }
+      void operator=(FiFo &&move) { _move_constructor_(move); }
       void operator+=(T data) { _push_(data); }
       T &operator[](unsigned long pos) { return __data_struct__[pos]; }
 
@@ -29,7 +29,7 @@ namespace System
     private:
       void _alloc_() { __data_struct__ = new T[__buffer_size__]; }
 
-      void _copy_constructor_(FIFO &cpy)
+      void _copy_constructor_(FiFo &cpy)
       {
         this->__buffer_size__ = cpy.__buffer_size__;
         this->__data_amount__ = cpy.__data_amount__;
@@ -43,7 +43,7 @@ namespace System
           this->__data_struct__[i] = cpy.__data_struct__[i];
       }
 
-      void _move_constructor_(FIFO &&move)
+      void _move_constructor_(FiFo &&move)
       {
         if (this->__data_struct__)
           delete[] this->__data_struct__;
@@ -55,7 +55,7 @@ namespace System
         move.__data_struct__ = nullptr;
       }
 
-      // Mode -> 1 == FIFO | Mode -> 0 == LIFO.
+      // Mode -> 1 == FiFo | Mode -> 0 == LIFO.
       void _relocation_copy_(T *temp, unsigned long mode = 0)
       {
         for (unsigned long i = 0; i < __buffer_size__; i++)
@@ -110,7 +110,7 @@ namespace System
           _realloc_down_();
       }
 
-      void _swap_(FIFO<T> &swap)
+      void _swap_(FiFo<T> &swap)
       {
         T *temp = this->__data_struct__;
         unsigned long vs_temp = this->__buffer_size__;
@@ -135,25 +135,25 @@ namespace System
       }
 
     public:
-      FIFO()
+      FiFo()
       {
         _init_();
         _alloc_();
       }
 
-      FIFO(FIFO &cpy)
+      FiFo(FiFo &cpy)
       {
         _init_();
         *this = cpy;
       }
 
-      FIFO(FIFO &&move)
+      FiFo(FiFo &&move)
       {
         _init_();
         *this = move;
       }
 
-      ~FIFO()
+      ~FiFo()
       {
         if (__data_struct__)
           delete[] __data_struct__;
@@ -209,7 +209,7 @@ namespace System
       /**
        * @brief Swap contents.
        */
-      void Swap(FIFO<T> &swap) { _swap_(swap); }
+      void Swap(FiFo<T> &swap) { _swap_(swap); }
 
       /**
        * @brief Resets the stack, removing all data.

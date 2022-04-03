@@ -10,13 +10,15 @@
 #include "DataTypes/SystemTypes.h"
 #include "Properties/PartitionProperties.h"
 #include "Addons/EEPROMPartition.h"
+#include "Addons/ExternalIO.h"
 
 /*
    Sistema:
    - Desenvolvido sistema de Threads;
    - Desenvolvido ThreadManager;
-   - StackThread automatizado;
+   - ThreadStack automatizada;
    - Configurações de Sistema adicionadas;
+   - ThreadManager e Threads remodelados;
 
    Periféricos:
     - Desenvolvidas Funções básicas de Tempo;
@@ -46,20 +48,21 @@
      - Desenvolver gerenciador de memória;
      - Desenvolver programação por eventos de hardware;
      - Desenvolver Sistema de erros com stack trace;
-     - Remodelar classe de Threads (construtor e funções);
 
 
     Tipos:
+    - Desenvolver tipo Typeof;
      - Desenvolver tipo Tuple;
      - Desenvolver tipo de dado Array;
      - Desenvolver tipo de dado List;
      - Desenvolver tipo de dado Map;
      - Desenvolver tipo de dado Bitset;
-     - Desenvolver tipo Typeof;
+     - Desenvolver tipo de dado UniqueSet;
 
     EEPROM:
      - Otimizar sistema de Get partições;
      - Desenvolver sistema de partições;
+     - Arrumar biblioteca de partições;
 
     String:
      - Desenvolver um formatador de strings;
@@ -101,49 +104,27 @@ System::GPIO Hardware;
 System::Time Clock;
 System::Memory::EEPROM eeprom;
 System::Memory::RAM ram;
-System::Addon::EEPartition partition;
+System::Addons::EEPartition partition;
+
+const unsigned char pinout[9] = {16, 8, 9, 10, 11, 12, 13, 14, 15};
+System::Addons::ExternalIO PORT(pinout);
 
 int main(void)
 {
-  Serial.Begin(9600);
   Clock.Begin();
-  Manager.Begin();
 
-  Manager.Create(vTask0, "Daniel", 500);
-  Manager.Create(vTask1, "Daniel", 1000);
-  Manager.Create(vTask2, "Daniel", 1500);
-  Manager.Create(vTask3, "Daniel", 2000);
-  Manager.Create(vTask4, "Daniel", 2500);
-  Manager.Create(vTask5, "Daniel", 3000);
-  Manager.Create(vTask6, "Daniel", 3500);
-  Manager.Create(vTask7, "Daniel", 4000);
-  Manager.Create(vTask8, "Daniel", 4500);
-  Manager.Create(vTask9, "Daniel", 5000);
-  while (1);
+  DDRD = 0xFF;
+
+  PORT.WriteSRAM(57, 0);
+
+  PORT.ReadSRAM(0);
+
+  while (1)
+  {
+  }
   return 0;
 }
 
-void vTask0() { Serial << "Task 0" << endl; }
-
-void vTask1() { Serial << "Task 1" << endl; }
-
-void vTask2() { Serial << "Task 2" << endl; }
-
-void vTask3() { Serial << "Task 3" << endl; }
-
-void vTask4() { Serial << "Task 4" << endl; }
-
-void vTask5() { Serial << "Task 5" << endl; }
-
-void vTask6() { Serial << "Task 6" << endl; }
-
-void vTask7() { Serial << "Task 7" << endl; }
-
-void vTask8() { Serial << "Task 8" << endl; }
-
-void vTask9() { Serial << "Task 9" << endl; }
-
-/*
 void printMemoryMap(unsigned char *memMap, unsigned int row)
 {
   unsigned int base = 15; // 15 -> for hexadecimal, 10 -> for decimal, 0 for char
@@ -171,4 +152,4 @@ void printMemoryMap(unsigned char *memMap, unsigned int row)
     else if (!base)
       Serial << (char)memMap[i];
   }
-}*/
+}
