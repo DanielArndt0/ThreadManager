@@ -111,26 +111,6 @@ unsigned int System::Memory::EEPROM::_used_mem_(unsigned int addr1, unsigned int
   return cnt;
 }
 
-unsigned char *System::Memory::EEPROM::_get_mem_(unsigned int addr1, unsigned int addr2)
-{
-  if (addr1 >= addr2 && addr2 > __eeprom_size__)
-    return nullptr;
-  if (__mem_buff__ == nullptr)
-    __mem_buff__ = new unsigned char[__eeprom_size__];
-  for (register unsigned int i = addr1; i < addr2; i++)
-    __mem_buff__[i] = _read_(i);
-  return __mem_buff__;
-}
-
-void System::Memory::EEPROM::_release_array_()
-{
-  if (__mem_buff__)
-  {
-    delete[] __mem_buff__;
-    __mem_buff__ = nullptr;
-  }
-}
-
 unsigned int System::Memory::EEPROM::_free_mem_(unsigned int addr1, unsigned int addr2) { return __eeprom_size__ - _used_mem_(addr1, addr2); }
 
 System::Memory::EEPROM::EEPROM() { _init_(); }
@@ -191,7 +171,3 @@ void System::Memory::EEPROM::Clean(unsigned int addr1, unsigned int addr2)
   for (unsigned int i = addr1; i < addr2; i++)
     _eeprom_clear_write_(0x00, 0x00, i);
 }
-
-unsigned char *System::Memory::EEPROM::Array() { return _get_mem_(0, __eeprom_size__); }
-
-void System::Memory::EEPROM::FreeArray() { _release_array_(); }

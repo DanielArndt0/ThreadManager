@@ -37,9 +37,6 @@ namespace System
       static const char *_read_string_(unsigned int addr);
       static unsigned int _used_mem_(unsigned int addr1, unsigned int addr2);
       static unsigned int _free_mem_(unsigned int addr1, unsigned int addr2);
-      static unsigned char *_get_mem_(unsigned int addr1, unsigned int addr2);
-      static void _release_array_();
-
     public:
       EEPROM();
 
@@ -188,18 +185,6 @@ namespace System
        * @param addr2 End address of the block.
        */
       static void Clean(unsigned int addr1, unsigned int addr2);
-
-      /**
-       * @brief Copy all data in EEPROM memory to an array in Heap memory.
-       *
-       * @return Returns all data from EEPROM memory in array format.
-       */
-      static unsigned char *Array();
-
-      /**
-       * @brief Frees data allocated on the memory heap. It will only take effect if the Array() method is invoked previously.
-       */
-      static void FreeArray();
     };
   }
 }
