@@ -39,6 +39,63 @@ unsigned char System::Addons::OLED::_begin_()
   return 0x01;
 }
 
+void System::Addons::OLED::_pixel_(unsigned char x, unsigned char y, unsigned char mode)
+{
+
+  if ((x < 0) || (x >= __widht__) || (y < 0) || (y >= __height__))
+    return;
+  if (mode)
+  {
+    __SET(__buffer__[x + (y / 8) * __widht__], y % 8);
+    return;
+  }
+  __CLEAR(__buffer__[x + (y / 8) * __widht__], y % 8);
+}
+
+void System::Addons::OLED::_line_(unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2, unsigned char mode)
+{
+  int m_new = 2 * (y2 - y1);
+  int slope_error_new = m_new - (x2 - x1);
+  for (int x = x1, y = y1; x <= x2; x++)
+  {
+    _pixel_(x, y, mode);
+    slope_error_new += m_new;
+    if (slope_error_new >= 0)
+    {
+      y++;
+      slope_error_new -= 2 * (x2 - x1);
+    }
+  }
+}
+
+void System::Addons::OLED::_v_line_(unsigned char x1, unsigned char y1, unsigned char y2, unsigned char mode)
+{
+  if ((x1 < 0) || (x1 >= __widht__) || (y1 < 0) || (y1 > __height__) || (y2 > __height__) || (y2 < 0))
+    return;
+  if (y1 < y2)
+    for (unsigned int i = y1; i < y2; i++)
+      _pixel_(x1, i, mode);
+  else if (y1 > y2)
+  {
+    for (unsigned int i = y1; i > y2; i--)
+      _pixel_(x1, i, mode);
+  }
+}
+
+void System::Addons::OLED::_h_line_(unsigned char x1, unsigned char x2, unsigned char y1, unsigned char mode)
+{
+  if ((x1 < 0) || (x1 > __widht__) || (y1 < 0) || (y1 >= __height__) || (x2 > __widht__) || (x2 < 0))
+    return;
+  if (x1 < x2)
+    for (unsigned int i = x1; i < x2; i++)
+      _pixel_(i, y1, mode);
+  else if (x1 > x2)
+  {
+    for (unsigned int i = x1; i > x2; i--)
+      _pixel_(i, y1, mode);
+  }
+}
+
 System::Addons::OLED::OLED(unsigned char widht, unsigned char height, unsigned char i2c_addr) : __widht__(widht), __height__(height), __i2c_addr__(i2c_addr) {}
 
 System::Addons::OLED::~OLED()
@@ -49,107 +106,13 @@ System::Addons::OLED::~OLED()
 
 unsigned char System::Addons::OLED::Begin() { return _begin_(); }
 
-void System::Addons::OLED::drawPixel(unsigned char x, unsigned char y)
-{
-  if ((x < 0) || (x >= __widht__) || (y < 0) || (y >= __height__))
-    return;
-  __buffer__[x + (y / 8) * __widht__] |= 0x01 << (y % 8);
-}
+void System::Addons::OLED::drawPixel(unsigned char x, unsigned char y, unsigned char color) { _pixel_(x, y, color); }
 
-void System::Addons::OLED::erasePixel(unsigned char x, unsigned char y)
-{
-  if ((x < 0) || (x >= __widht__) || (y < 0) || (y >= __height__))
-    return;
-  __buffer__[x + (y / 8) * __widht__]  &= ~(0x01 << (y % 8));
-}
+void System::Addons::OLED::drawLine(unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2, unsigned char color) { _line_(x1, y1, x2, y2, color); }
 
-void System::Addons::OLED::drawLine(unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2)
-{
-  int m_new = 2 * (y2 - y1);               
-  int slope_error_new = m_new - (x2 - x1);
-  for (int x = x1, y = y1; x <= x2; x++)
-  {
-    drawPixel(x, y);          
-    slope_error_new += m_new; 
-    if (slope_error_new >= 0) 
-    {
-      y++;                              
-      slope_error_new -= 2 * (x2 - x1); 
-    }
-  }
-}
+void System::Addons::OLED::drawVLine(unsigned char x1, unsigned char y1, unsigned char y2, unsigned char color) { _v_line_(x1, y1, y2, color); }
 
-void System::Addons::OLED::eraseLine(unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2)
-{
-  int m_new = 2 * (y2 - y1);               
-  int slope_error_new = m_new - (x2 - x1);
-  for (int x = x1, y = y1; x <= x2; x++)
-  {
-    erasePixel(x, y);          
-    slope_error_new += m_new; 
-    if (slope_error_new >= 0)
-    {
-      y++;
-      slope_error_new -= 2 * (x2 - x1); 
-    }
-  }
-}
-
-void System::Addons::OLED::drawVLine(unsigned char x1, unsigned char y1, unsigned char y2)
-{
-  if ((x1 < 0) || (x1 >= __widht__) || (y1 < 0) || (y1 > __height__) || (y2 > __height__) || (y2 < 0))
-    return;
-  if (y1 < y2)
-    for (unsigned int i = y1; i < y2; i++)
-      drawPixel(x1, i);
-  else if (y1 > y2)
-  {
-    for (unsigned int i = y1; i > y2; i--)
-      drawPixel(x1, i);
-  }
-}
-
-void System::Addons::OLED::eraseVLine(unsigned char x1, unsigned char y1, unsigned char y2)
-{
-  if ((x1 < 0) || (x1 >= __widht__) || (y1 < 0) || (y1 > __height__) || (y2 > __height__) || (y2 < 0))
-    return;
-  if (y1 < y2)
-    for (unsigned int i = y1; i < y2; i++)
-      erasePixel(x1, i);
-  else if (y1 > y2)
-  {
-    for (unsigned int i = y1; i > y2; i--)
-      erasePixel(x1, i);
-  }
-}
-
-void System::Addons::OLED::drawHLine(unsigned char x1, unsigned char x2, unsigned char y1)
-{
-  if ((x1 < 0) || (x1 > __widht__) || (y1 < 0) || (y1 >= __height__) || (x2 > __widht__) || (x2 < 0))
-    return;
-  if (x1 < x2)
-    for (unsigned int i = x1; i < x2; i++)
-      drawPixel(i, y1);
-  else if (x1 > x2)
-  {
-    for (unsigned int i = x1; i > x2; i--)
-      drawPixel(i, y1);
-  }
-}
-
-void System::Addons::OLED::eraseHLine(unsigned char x1, unsigned char x2, unsigned char y1)
-{
-  if ((x1 < 0) || (x1 > __widht__) || (y1 < 0) || (y1 >= __height__) || (x2 > __widht__) || (x2 < 0))
-    return;
-  if (x1 < x2)
-    for (unsigned int i = x1; i < x2; i++)
-      erasePixel(i, y1);
-  else if (x1 > x2)
-  {
-    for (unsigned int i = x1; i > x2; i--)
-      erasePixel(i, y1);
-  }
-}
+void System::Addons::OLED::drawHLine(unsigned char x1, unsigned char x2, unsigned char y1, unsigned char color) { _h_line_(x1, x2, y1, color); }
 
 void System::Addons::OLED::invertDisplay(unsigned char mode)
 {
@@ -206,3 +169,34 @@ void System::Addons::OLED::Commit()
     System::Com::TWI::Write(__buffer__[i]);
   System::Com::TWI::Stop();
 }
+
+/*
+void drawline(int x0, int y0, int x1, int y1)
+{
+  int ponto_medio_x, ponto_medio_y, ponto, x, y;
+
+  ponto_medio_x = x1 - x0;
+  ponto_medio_y = y1 - y0;
+
+  x = x0;
+  y = y0;
+
+  ponto = 2 * ponto_medio_x - ponto_medio_y;
+
+  while (x < x1)
+  {
+    if (ponto >= 0)
+    {
+      putpixel(x, y, 7);
+      y = y + 1;
+      ponto = ponto + 2 * dy - 2 * dx;
+    }
+    else
+    {
+      putpixel(x, y, 7);
+      ponto = ponto + 2 * dy;
+    }
+    x = x + 1;
+  }
+}
+*/

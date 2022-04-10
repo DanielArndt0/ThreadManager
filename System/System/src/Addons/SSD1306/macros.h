@@ -1,3 +1,5 @@
+#pragma once
+
 #define __OLED_DISPLAY_OFF 0xAE
 #define __OLED_DISPLAY_ON 0xAF
 #define __OLED_DISPLAY_CLK 0xD5

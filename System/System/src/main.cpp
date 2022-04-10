@@ -89,6 +89,9 @@ using namespace Data;
 #define WIDTH 128
 #define __DSP_ADDR 0x78
 
+void animation1(unsigned long rep);
+void animation2(unsigned long rep);
+
 System::Managers::ThreadManager Manager;
 System::Com::UART Serial;
 System::Com::TWI I2C;
@@ -104,38 +107,36 @@ int main(void)
   I2C.Begin(400000);
   Serial.Begin(9600);
   Display.Begin();
+  Display.Contrast(0xFF);
 
-  unsigned int i = 0, c = 0;
-  unsigned char iVoltando = 0;
-  unsigned char cVoltando = 0;
+  animation1(10000);
 
   while (1)
   {
-    Display.drawHLine(0, 128, i);
-    Display.drawVLine(c, 0, 64);
-    Display.Commit();
-    Display.eraseHLine(0, 128, i);
-    Display.eraseVLine(c, 0, 64);
-    if (c != 128 && !cVoltando)
-      c++;
-    else
-      cVoltando = 1;
-
-    if (i != 64 && !iVoltando)
-      i++;
-    else
-      iVoltando = 1;
-
-    if (c > 0 && cVoltando)
-      c--;
-    else
-      cVoltando = 0;
-
-    if (i > 0 && iVoltando)
-      i--;
-    else
-      iVoltando = 0;
   }
 
   return 0;
+}
+
+void animation1(unsigned long rep)
+{
+  unsigned char color = 1;
+  for (unsigned long i = 0; i < rep; i++)
+  {
+    for (unsigned char line = 0, col = 0; line != 127; line++)
+    {
+      Display.drawPixel(line, col, color);
+      Display.Commit();
+      if (col != 63)
+        col++;
+    }
+    for (unsigned char line = 127, col = 63; line != 0; line--)
+    {
+      Display.drawPixel(line, col, color);
+      Display.Commit();
+      if (col != 0)
+        col--;
+    }
+    color = !color;
+  }
 }
