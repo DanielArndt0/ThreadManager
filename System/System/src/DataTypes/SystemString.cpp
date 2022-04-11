@@ -217,7 +217,7 @@ System::Data::String::String(const System::Data::String &cpy)
   *this = cpy;
 }
 
-System::Data::String::String(System::Data::String &&move)
+System::Data::String::String(const System::Data::String &&move)
 {
   _init_();
   *this = move;

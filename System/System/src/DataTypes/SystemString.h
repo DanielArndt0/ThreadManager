@@ -115,7 +115,7 @@ namespace System
       /**********************************************/
 
       String(const String &cpy);
-      String(String &&move);
+      String(const String &&move);
       ~String(void);
 
       /******************************************************/

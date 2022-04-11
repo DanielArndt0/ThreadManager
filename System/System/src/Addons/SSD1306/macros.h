@@ -1,13 +1,20 @@
 #pragma once
 
+// Fundamental commands
 #define __OLED_DISPLAY_OFF 0xAE
 #define __OLED_DISPLAY_ON 0xAF
 #define __OLED_DISPLAY_CLK 0xD5
 #define __OLED_MULTIPLEX_RADIO 0xA8
 #define __OLED_DISPLAY_OFFSET 0xD3
 #define __OLED_START_LINE 0x40
+
 #define __OLED_MEMORY_ADDRESSING_MODE 0x20
 #define __OLED_HORIZONTAL_MODE 0x00
+#define __OLED_SET_COLUMN_ADDR 0x21
+#define __OLED_SET_PAGE_ADDR 0x22
+#define __MAX_PAGES 0x07
+#define __MAX_COLUMNS 0x7F
+
 #define __OLED_SEGMENT_REMAP_0 0xA0
 #define __OLED_SEGMENT_REMAP_1 0xA1
 #define __OLED_CHARGE_PUMP_CONFIG 0x8D
@@ -19,11 +26,54 @@
 #define __OLED_PRE_CHARGE 0xD9
 #define __OLED_VCOMH 0xDB
 #define __OLED_ENTIRE_DISPLAY_ON 0xA4
+#define __OLED_ENTIRE_DISPLAY_OFF 0xA5
 #define __OLED_INVERT_PIXELS_OFF 0xA6
 #define __OLED_INVERT_PIXELS_ON 0xA7
 #define __OLED_SET_MEMORY_ADDR 0x20
 
+// Hardware Acceleration
+#define __DEACTIVATE_SCROLL 0x2E
+#define __ACTIVATE_SCROLL 0x2F
+#define __H_RIGHT_SCROLL 0x26
+#define __H_LEFT_SCROLL 0x27
+
+// Pages
+#define __PAGE0 0x00
+#define __PAGE1 0x01
+#define __PAGE2 0x02
+#define __PAGE3 0x03
+#define __PAGE4 0x04
+#define __PAGE5 0x05
+#define __PAGE6 0x06
+#define __PAGE7 0x07
+
+// FPS
+#define __2FRAMES 0x07
+#define __3FRAMES 0x04
+#define __4FRAMES 0x05
+#define __5FRAMES 0x00
+#define __25FRAMES 0x06
+#define __64FRAMES 0x01
+#define __128FRAMES 0x02
+#define __256FRAMES 0x03
+
+// Stream
 #define __OLED_DATA_STREAM 0x40
 #define __OLED_SINGLE_DATA_BYTE 0xC0
 #define __OLED_CMD_STREAM 0x00
 #define __OLED_SINGLE_CMD_BYTE 0x80
+
+// User macros
+#define BLACK 0x00
+#define WHITE 0x01
+#define LEFT 0x00
+#define RIGHT 0x01
+#define VELOCITY1 __2FRAMES
+#define VELOCITY2 __3FRAMES
+#define VELOCITY3 __4FRAMES
+#define VELOCITY4 __5FRAMES
+#define VELOCITY5 __25FRAMES
+#define VELOCITY6 __64FRAMES
+#define VELOCITY7 __128FRAMES
+#define VELOCITY8 __256FRAMES
+

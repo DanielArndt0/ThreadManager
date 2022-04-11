@@ -25,6 +25,7 @@
 #define __SHIFTL(byte, shift) ((byte) << shift)
 #define __HIGH(byte) ((byte) >> (0x08))
 #define __LOW(byte) ((byte) & (0xFF))
+#define __MASK(byte, mask) ((byte) & (mask))
 
 // Analog-Digital
 #define __ADC_VOLTAGE(x) (x * (5.0 / 1024.0))

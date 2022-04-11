@@ -65,6 +65,7 @@
      - Arrumar biblioteca de partições;
 
     String:
+     - Corrigir vazamento de memória na função _concat_()
      - Desenvolver um formatador de strings;
 
     Serial:
@@ -79,6 +80,11 @@
     Interrupções:
      - Adicionar mais funções para configurar interrupções;
 
+    SSD1306:
+     - Adicionar classe fonte;
+     - Organizar bibliotecas graficas;
+     - Desenvolver funções praticas para posicionamento de strings;
+
 */
 
 using namespace System;
@@ -88,9 +94,6 @@ using namespace Data;
 #define HEIGHT 64
 #define WIDTH 128
 #define __DSP_ADDR 0x78
-
-void animation1(unsigned long rep);
-void animation2(unsigned long rep);
 
 System::Managers::ThreadManager Manager;
 System::Com::UART Serial;
@@ -106,37 +109,19 @@ int main(void)
   Clock.Begin();
   I2C.Begin(400000);
   Serial.Begin(9600);
+
   Display.Begin();
   Display.Contrast(0xFF);
 
-  animation1(10000);
+  Display.drawHLine(1, 125, 1);
+  Display.drawHLine(1, 125, 61);
+  
 
   while (1)
   {
+    Display.writeString(String("Free RAM: ") += String(ram.freeRAM()), 0, 8);
+    Clock.Pause(100);
   }
 
   return 0;
-}
-
-void animation1(unsigned long rep)
-{
-  unsigned char color = 1;
-  for (unsigned long i = 0; i < rep; i++)
-  {
-    for (unsigned char line = 0, col = 0; line != 127; line++)
-    {
-      Display.drawPixel(line, col, color);
-      Display.Commit();
-      if (col != 63)
-        col++;
-    }
-    for (unsigned char line = 127, col = 63; line != 0; line--)
-    {
-      Display.drawPixel(line, col, color);
-      Display.Commit();
-      if (col != 0)
-        col--;
-    }
-    color = !color;
-  }
 }
