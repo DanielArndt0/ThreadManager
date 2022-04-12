@@ -3,6 +3,8 @@
 unsigned char System::Addons::OLED::_begin_()
 {
   System::Time::Pause(100);
+  if (!__buffer__ && (__buffer__ = (unsigned char *)calloc(((__widht__ * __height__) / 8), sizeof(unsigned char))) == NULL)
+    return 0x00;
   _clear_ram_();
   System::Com::TWI::Start();
   System::Com::TWI::Write((__i2c_addr__ & __TWI_ADDR_MASK) | __TWI_WRITE);
@@ -57,32 +59,78 @@ void System::Addons::OLED::_ssd_cmd_(unsigned char streamMode, unsigned char cmd
 
 void System::Addons::OLED::_addr_ctrl_(unsigned char column, unsigned char page)
 {
-  unsigned char cmd[] = {__OLED_SET_PAGE_ADDR, 0x00, __MAX_PAGES, __OLED_SET_COLUMN_ADDR, 0x00, __MAX_COLUMNS};
-  cmd[1] = page;
-  cmd[4] = column;
+  unsigned char cmd[] = {__OLED_SET_PAGE_ADDR, page, __MAX_PAGES, __OLED_SET_COLUMN_ADDR, column, __MAX_COLUMNS};
   _ssd_cmd_(__OLED_CMD_STREAM, cmd, 6);
 }
 
 void System::Addons::OLED::_clear_ram_()
 {
   for (unsigned char i = 0; i < 128; i++)
+  {
     for (unsigned char j = 0; j < 8; j++)
     {
       _addr_ctrl_(i, j);
       _ssd_cmd_(__OLED_SINGLE_DATA_BYTE, 0x00);
     }
+  }
 }
 
-void System::Addons::OLED::_set_cursor_(unsigned char x, unsigned char y) { _addr_ctrl_(x, (y / 8)); }
+// Seta a coluna e a page
+void System::Addons::OLED::_set_cursor_(unsigned char x, unsigned char y) { _addr_ctrl_(x, (y / __PAGE_LEN)); }
 
 void System::Addons::OLED::_pixel_(unsigned char x, unsigned char y, unsigned char color)
 {
-
   if ((x < 0) || (x >= __widht__) || (y < 0) || (y >= __height__))
     return;
   _set_cursor_(x, y);
-  _ssd_cmd_(__OLED_SINGLE_DATA_BYTE, (color ? (0x01 << (y % 8)) : (0x00 << (y % 8))));
+  __buffer__[x + (y / __PAGE_LEN) * __widht__] |= (color ? (0x01 << (y % 8)) : (0x00 << (y % 8)));
+  _ssd_cmd_(__OLED_SINGLE_DATA_BYTE, __buffer__[x + (y / __PAGE_LEN) * __widht__]);
 }
+
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/
 
 void System::Addons::OLED::_line_(unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2, unsigned char color)
 {
@@ -102,28 +150,28 @@ void System::Addons::OLED::_line_(unsigned char x1, unsigned char y1, unsigned c
 
 void System::Addons::OLED::_v_line_(unsigned char x1, unsigned char y1, unsigned char y2, unsigned char color)
 {
-  if ((x1 < 0) || (x1 >= __widht__) || (y1 < 0) || (y1 > __height__) || (y2 > __height__) || (y2 < 0))
+  if ((x1 < 0) || (x1 >= __widht__) || (y1 < 0) || (y1 >= __height__) || (y2 >= __height__) || (y2 < 0))
     return;
   if (y1 < y2)
-    for (unsigned int i = y1; i < y2; i++)
+    for (unsigned int i = y1; i <= y2; i++)
       _pixel_(x1, i, color);
   else if (y1 > y2)
   {
-    for (unsigned int i = y1; i > y2; i--)
+    for (unsigned int i = y1; i >= y2; i--)
       _pixel_(x1, i, color);
   }
 }
 
 void System::Addons::OLED::_h_line_(unsigned char x1, unsigned char x2, unsigned char y1, unsigned char color)
 {
-  if ((x1 < 0) || (x1 > __widht__) || (y1 < 0) || (y1 >= __height__) || (x2 > __widht__) || (x2 < 0))
+  if ((x1 < 0) || (x1 >= __widht__) || (y1 < 0) || (y1 >= __height__) || (x2 >= __widht__) || (x2 < 0))
     return;
   if (x1 < x2)
-    for (unsigned char i = x1; i < x2; i++)
+    for (unsigned char i = x1; i <= x2; i++)
       _pixel_(i, y1, color);
   else if (x1 > x2)
   {
-    for (unsigned char i = x1; i > x2; i--)
+    for (unsigned char i = x1; i >= x2; i--)
       _pixel_(i, y1, color);
   }
 }
@@ -137,7 +185,7 @@ void System::Addons::OLED::_h_scroll_(unsigned char startPage, unsigned char end
   _ssd_cmd_(__OLED_CMD_STREAM, cmd, 8);
 }
 
-void System::Addons::OLED::_print_char_(char chr, unsigned char x, unsigned char y, unsigned char color)
+void System::Addons::OLED::_write_char_(char chr, unsigned char x, unsigned char y, unsigned char color)
 {
   chr -= 0x20;
   if (chr < 0 || chr > 128)
@@ -147,11 +195,83 @@ void System::Addons::OLED::_print_char_(char chr, unsigned char x, unsigned char
     _ssd_cmd_(__OLED_SINGLE_DATA_BYTE, (color ? pgm_read_byte(&(font[(unsigned char)chr][i])) : 0x00));
 }
 
+void System::Addons::OLED::_write_str_(System::Data::String str, unsigned char x, unsigned char y, unsigned char color)
+{
+  for (unsigned char i = 0, xs = x, ys = y; i < str.Length(); i++)
+  {
+    if (!(i % (__widht__ / 8)) && i)
+      ys += 8; // 8 e o altura da fonte
+    _write_char_(str.At(i), xs, ys, WHITE);
+    xs += 8; // 8 e a largura da fonte
+  }
+}
+
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/
+
 System::Addons::OLED::OLED(unsigned char widht, unsigned char height, unsigned char i2c_addr) : __widht__(widht), __height__(height), __i2c_addr__(i2c_addr) {}
 
 unsigned char System::Addons::OLED::Begin() { return _begin_(); }
 
+void System::Addons::OLED::setCursor(unsigned char x, unsigned char y) { _set_cursor_(x, y); }
+
 void System::Addons::OLED::drawPixel(unsigned char x, unsigned char y, unsigned char color) { _pixel_(x, y, color); }
+
+/*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/
 
 void System::Addons::OLED::drawLine(unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2, unsigned char color) { _line_(x1, y1, x2, y2, color); }
 
@@ -159,18 +279,9 @@ void System::Addons::OLED::drawVLine(unsigned char x1, unsigned char y1, unsigne
 
 void System::Addons::OLED::drawHLine(unsigned char x1, unsigned char x2, unsigned char y1, unsigned char color) { _h_line_(x1, x2, y1, color); }
 
-void System::Addons::OLED::writeString(System::Data::String str, unsigned char x, unsigned char y, unsigned char color)
-{
-  for (unsigned char i = 0, xs = x, ys = y; i < str.Length(); i++)
-  {
-    if (!(i % (__widht__ / 8)) && i)
-      ys += 8; // 8 e o altura da fonte
-    _print_char_(str.At(i), xs, ys, WHITE);
-    xs += 8; // 8 e a largura da fonte
-  }
-}
+void System::Addons::OLED::writeString(System::Data::String str, unsigned char x, unsigned char y, unsigned char color) { _write_str_(str, x, y, color); }
 
-void System::Addons::OLED::writeChar(unsigned char chr, unsigned char x, unsigned char y, unsigned char color) { _print_char_(chr, x, y, color); }
+void System::Addons::OLED::writeChar(unsigned char chr, unsigned char x, unsigned char y, unsigned char color) { _write_char_(chr, x, y, color); }
 
 void System::Addons::OLED::horizontalScrollSetup(unsigned char startPage, unsigned char endPage, unsigned char frames, unsigned char direction) { _h_scroll_(startPage, endPage, frames, direction); }
 

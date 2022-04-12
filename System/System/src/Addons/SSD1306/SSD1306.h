@@ -14,6 +14,7 @@ namespace System
     class OLED
     {
     private:
+      unsigned char *__buffer__;
       unsigned char __widht__;
       unsigned char __height__;
       unsigned char __i2c_addr__;
@@ -30,7 +31,8 @@ namespace System
       void _v_line_(unsigned char x1, unsigned char y1, unsigned char y2, unsigned char color);
       void _h_line_(unsigned char x1, unsigned char x2, unsigned char y1, unsigned char color);
       void _h_scroll_(unsigned char startPage, unsigned char endPage, unsigned char frames, unsigned char direction);
-      void _print_char_(char chr, unsigned char x, unsigned char y, unsigned char color);
+      void _write_char_(char chr, unsigned char x, unsigned char y, unsigned char color);
+      void _write_str_(Data::String str, unsigned char x, unsigned char y, unsigned char color = WHITE);
 
     public:
       OLED(unsigned char widht, unsigned char height, unsigned char i2c_addr);
@@ -39,10 +41,10 @@ namespace System
       unsigned char Begin();
 
       void setCursor(unsigned char x, unsigned char y);
-      void drawPixel(unsigned char x, unsigned char y, unsigned char color = 1);
-      void drawLine(unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2, unsigned char color = 1);
-      void drawVLine(unsigned char x1, unsigned char y1, unsigned char y2, unsigned char color = 1);
-      void drawHLine(unsigned char x1, unsigned char x2, unsigned char y1, unsigned char color = 1);
+      void drawPixel(unsigned char x, unsigned char y, unsigned char color = WHITE);
+      void drawLine(unsigned char x1, unsigned char y1, unsigned char x2, unsigned char y2, unsigned char color = WHITE);
+      void drawVLine(unsigned char x1, unsigned char y1, unsigned char y2, unsigned char color = WHITE);
+      void drawHLine(unsigned char x1, unsigned char x2, unsigned char y1, unsigned char color = WHITE);
 
       void writeString(Data::String str, unsigned char x, unsigned char y, unsigned char color = WHITE);
       void writeChar(unsigned char chr, unsigned char x, unsigned char y, unsigned char color = WHITE);

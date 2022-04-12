@@ -38,6 +38,7 @@
 #define __H_LEFT_SCROLL 0x27
 
 // Pages
+#define __PAGE_LEN 0x08
 #define __PAGE0 0x00
 #define __PAGE1 0x01
 #define __PAGE2 0x02

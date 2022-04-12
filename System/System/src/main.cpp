@@ -109,18 +109,15 @@ int main(void)
   Clock.Begin();
   I2C.Begin(400000);
   Serial.Begin(9600);
-
   Display.Begin();
-  Display.Contrast(0xFF);
 
-  Display.drawHLine(1, 125, 1);
-  Display.drawHLine(1, 125, 61);
-  
+  Display.drawHLine(0, 127, 0);
+  Display.drawHLine(0, 127, 63);
+  Display.drawVLine(0, 0, 63);
+  Display.drawVLine(127, 0, 63);
 
   while (1)
   {
-    Display.writeString(String("Free RAM: ") += String(ram.freeRAM()), 0, 8);
-    Clock.Pause(100);
   }
 
   return 0;
