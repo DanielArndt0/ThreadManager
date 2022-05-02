@@ -19,16 +19,16 @@ unsigned char System::GPIO::_port_selector_(volatile unsigned char **reg, unsign
   {
     if (__CHECK(*reg[0], pin))
       return 0x01;
-    else if (pin >= 8 && pin < 14)
-    {
-      if (__CHECK(*reg[1], (pin - 8)))
-        return 0x01;
-    }
-    else if (pin >= 14 && pin < 20)
-    {
-      if (__CHECK(*reg[2], (pin - 14)))
-        return 0x01;
-    }
+  }
+  else if (pin >= 8 && pin < 14)
+  {
+    if (__CHECK(*reg[1], (pin - 8)))
+      return 0x01;
+  }
+  else if (pin >= 14 && pin < 20)
+  {
+    if (__CHECK(*reg[2], (pin - 14)))
+      return 0x01;
   }
   return __FALSE;
 }

@@ -19,7 +19,7 @@ namespace System
       unsigned char __height__;
       unsigned char __i2c_addr__;
 
-    private:
+    protected:
       unsigned char _begin_();
       void _ssd_cmd_(unsigned char streamMode, unsigned char *cmdArray, unsigned int nCmd);
       void _ssd_cmd_(unsigned char streamMode, unsigned char cmd);

@@ -51,7 +51,7 @@
 
 
     Tipos:
-    - Desenvolver tipo Typeof;
+     - Desenvolver tipo Typeof;
      - Desenvolver tipo Tuple;
      - Desenvolver tipo de dado Array;
      - Desenvolver tipo de dado List;
@@ -84,6 +84,7 @@
      - Adicionar classe fonte;
      - Organizar bibliotecas graficas;
      - Desenvolver funções praticas para posicionamento de strings;
+     - Desalocar memoria quando o display for desligado;
 
 */
 
@@ -95,6 +96,15 @@ using namespace Data;
 #define WIDTH 128
 #define __DSP_ADDR 0x78
 
+#define LED 13
+
+void task0();
+void task1();
+void task2();
+void task3();
+void task4();
+void task5();
+
 System::Managers::ThreadManager Manager;
 System::Com::UART Serial;
 System::Com::TWI I2C;
@@ -104,21 +114,79 @@ System::Memory::EEPROM eeprom;
 System::Memory::RAM ram;
 System::Addons::OLED Display(WIDTH, HEIGHT, __DSP_ADDR);
 
+unsigned char DC = 0x00;
+
 int main(void)
 {
+  Hardware.pinConfig(LED, OUTPUT);
   Clock.Begin();
-  I2C.Begin(400000);
   Serial.Begin(9600);
-  Display.Begin();
+  I2C.Begin(10E4);
+  Manager.Begin();
 
-  Display.drawHLine(0, 127, 0);
-  Display.drawHLine(0, 127, 63);
-  Display.drawVLine(0, 0, 63);
-  Display.drawVLine(127, 0, 63);
+  if (!Display.Begin())
+    Serial << "Erro ao inicializar display" << endl;
+  Display.Off();
 
+  if (!Manager.Create(task0, "Monitor", 5000))
+    Serial << "Erro ao criar task Monitor" << endl;
+
+  if (!Manager.Create(task1, "LED", 2000))
+    Serial << "Erro ao criar task LED" << endl;
+
+  if (!Manager.Create(task2, "ReadPin", 2000))
+    Serial << "Erro ao criar task ReadPIN" << endl;
+
+  if (!Manager.Create(task3, "RAM", 6000))
+    Serial << "Erro ao criar task RAM" << endl;
+
+  if (!Manager.Create(task4, "AnalogRead", 500))
+    Serial << "Erro ao criar task AnalogRead" << endl;
+
+  if (!Manager.Create(task5, "DutyCicle", 3000))
+    Serial << "Erro ao criar task DutyCicle" << endl;
+
+  Clock.Pause(6500);
+  Display.On();
+
+  unsigned long calc = 0x00;
   while (1)
   {
+    DC = Clock.Ticks() - calc;
+    calc = Clock.Ticks() - DC;
   }
 
   return 0;
+}
+
+void task0()
+{
+  Serial << endl;
+  for (unsigned int i = 0x00; i < Manager.getTotalThreads(); i++)
+    Serial << "Task " << i << ": " << Manager.getName(i) << endl;
+}
+
+void task1()
+{
+  Hardware.pinWrite(LED, !Hardware.pinRead(LED));
+}
+
+void task2()
+{
+  Display.writeString(String("LED: ") += String(Hardware.pinRead(LED) ? "On " : "Off"), 0, 0, WHITE);
+}
+
+void task3()
+{
+  Display.writeString(String("RAM: ") += String(ram.freeRAM()) += String(" Bytes."), 0, 16, WHITE);
+}
+
+void task4()
+{
+  Display.writeString(String("Pin 14: ") += String(Hardware.analogReadVolts(0)) += String('V'), 0, 32, WHITE);
+}
+
+void task5()
+{
+  Display.writeString(String("Execution: ") += String(DC) += String(DC > 99 ? "ms" : "ms "), 0, 48, WHITE);
 }

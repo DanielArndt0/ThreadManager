@@ -1,5 +1,6 @@
 #include "Managers/ThreadManager.h"
 #include "Com/SystemUART.h"
+
 extern System::Com::UART Serial;
 
 extern unsigned long __system_tick_counter__;
@@ -10,7 +11,7 @@ System::Data::Vector<CoadjutorSystem::Thread> System::Managers::ThreadManager::_
 
 bool System::Managers::ThreadManager::_check_existing_address_(System::StdThread *thread)
 {
-  for (register unsigned int i; i <= __thread_stack__.Size(); i++)
+  for (register unsigned int i; i < __thread_stack__.Size(); i++)
   {
     if (__thread_stack__[i].getAddress() == thread)
       return __FALSE;
@@ -122,11 +123,11 @@ System::StdThread *System::Managers::ThreadManager::_get_thread_addr_(unsigned i
 int System::Managers::ThreadManager::_get_thread_number_(System::StdThread *addr_Thread)
 {
   if (addr_Thread == NULL)
-    return -0x1;
+    return -0x01;
   for (register int i = 0x00; i < (signed)__thread_stack__.Size(); i++)
     if (__thread_stack__[i].getAddress() == addr_Thread)
       return i;
-  return -0x1;
+  return -0x01;
 }
 
 bool System::Managers::ThreadManager::_get_thread_status_(unsigned int ThreadNumber)
