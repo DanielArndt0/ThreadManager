@@ -149,11 +149,13 @@ int main(void)
   Clock.Pause(6500);
   Display.On();
 
-  unsigned long calc = 0x00;
+  unsigned char moveAverage = 0x00;
   while (1)
   {
-    DC = Clock.Ticks() - calc;
-    calc = Clock.Ticks() - DC;
+    moveAverage = 0x00;
+    for (unsigned int i = 0; i < 10; i++)
+      moveAverage += Clock.Ticks() - moveAverage;
+    DC = moveAverage / 10;
   }
 
   return 0;
