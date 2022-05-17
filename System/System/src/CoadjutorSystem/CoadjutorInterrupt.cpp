@@ -12,6 +12,10 @@ ISR(TIMER1_OVF_vect)
   System::Settings::Interrupts::TIMER1()->Reset();
 }
 
+ISR(USART_RX_vect) { System::Com::UART::BufferManager(); }
+
 CoadjutorSystem::Timer0 *System::Settings::Interrupts::TIMER0() { return &__timer_0__; }
 
 CoadjutorSystem::Timer1 *System::Settings::Interrupts::TIMER1() { return &__timer_1__; }
+
+CoadjutorSystem::UART_INT *System::Settings::Interrupts::UART() { return &__uart__; }

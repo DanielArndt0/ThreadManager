@@ -62,7 +62,6 @@ void System::Managers::ThreadManager::_delete_manager_()
 {
   __thread_stack__.Reset(); // Trocar para delete()
   __timer_stack__.Reset();  // Trocar para delete()
-  System::Settings::Interrupts::TIMER0()->Disable();
 }
 
 bool System::Managers::ThreadManager::_execute_thread_(unsigned int ThreadNumber)

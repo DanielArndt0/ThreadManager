@@ -1,5 +1,8 @@
 #include "Com/SystemUART.h"
 
+unsigned int System::Com::UART::__uart_status__;
+System::Data::Vector<char> System::Com::UART::__stack__;
+
 void System::Com::UART::Begin(unsigned int baudRate)
 {
   unsigned int __ubrr__ = (__SYSTEM_CLOCK / 0x08 / baudRate) - 0x01;
@@ -10,7 +13,29 @@ void System::Com::UART::Begin(unsigned int baudRate)
   __WRITE_REG(UCSR0B, TXEN0, __TRUE);
   __WRITE_REG(UCSR0B, UCSZ02, __FALSE);
   __WRITE_REG(UCSR0C, USBS0, __FALSE);
+  __WRITE_REG(UCSR0B, RXCIE0, __TRUE);
   __uart_status__ = __TRUE;
+}
+
+/*
+ *   Flush RX buffer
+ */
+void System::Com::UART::Flush(void)
+{
+  unsigned char f = 0x00;
+  while (__CHECK(UCSR0A, RXC0))
+    if (!f)
+      f = UDR0;
+}
+
+/**
+ * @brief UART RX Interrupt Buffer Manager
+ *
+ */
+void System::Com::UART::BufferManager()
+{
+  if (__stack__.Size() < 64)
+    __stack__.Push(__uart_receive__());
 }
 
 /*
@@ -21,9 +46,11 @@ System::Com::UART *System::Com::UART::__uart_send__(unsigned char data)
 {
   if (__uart_status__ == __FALSE)
     return this;
-  while (!(__CHECK(UCSR0A, UDRE0)));
+  while (!(__CHECK(UCSR0A, UDRE0)))
+    ;
   UDR0 = data;
-  while (!(__CHECK(UCSR0A, TXC0)));
+  while (!(__CHECK(UCSR0A, TXC0)))
+    ;
   return this;
 }
 
@@ -65,7 +92,8 @@ unsigned char System::Com::UART::__uart_receive__()
 {
   if (__uart_status__ == __FALSE)
     return 0x00;
-  while (!(__CHECK(UCSR0A, RXC0)));
+  while (!(__CHECK(UCSR0A, RXC0)))
+    ;
   if (__CHECK(UCSR0A, DOR0) || __CHECK(UCSR0A, FE0))
   {
     UDR0;
@@ -76,19 +104,17 @@ unsigned char System::Com::UART::__uart_receive__()
   return UDR0;
 }
 
-System::Com::UART &System::Com::UART::operator>>(unsigned char &data)
-{
-  data = __uart_receive__();
-  return *this;
-}
+unsigned char System::Com::UART::Available() { return __stack__.Size() ? 0x01 : 0x00; }
 
-/*
- *   Flush RX buffer
- */
-void System::Com::UART::Flush(void)
+unsigned long System::Com::UART::bufferLength() { return __stack__.Size(); }
+
+char System::Com::UART::operator>>(char &data)
 {
-  unsigned char f = 0x00;
-  while (__CHECK(UCSR0A, RXC0))
-    if (!f)
-      f = UDR0;
+  if (Available())
+  {
+    data = __stack__.First();
+    __stack__.Pop(0x00);
+    return data;
+  }
+  return 0x00;
 }

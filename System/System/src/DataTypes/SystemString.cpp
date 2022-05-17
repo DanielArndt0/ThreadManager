@@ -318,6 +318,30 @@ int System::Data::String::Find(char ch, unsigned int pos) const
   return -1;
 }
 
+bool System::Data::String::Equals(System::Data::String &str) const { return _equal_(str.__allocated_buffer__); }
+
+bool System::Data::String::Equals(const char *str) const { return _equal_(str); }
+
+bool System::Data::String::Different(System::Data::String &str) const { return _different_(str.__allocated_buffer__); }
+
+bool System::Data::String::Different(const char *str) const { return _different_(str); }
+
+bool System::Data::String::BiggerThen(System::Data::String &str) const { return _bigger_then_(str.__allocated_buffer__); }
+
+bool System::Data::String::BiggerThen(const char *str) const { return _bigger_then_(str); }
+
+bool System::Data::String::BiggerEqualThen(System::Data::String &str) const { return _bigger_equal_then_(str.__allocated_buffer__); }
+
+bool System::Data::String::BiggerEqualThen(const char *str) const { return _bigger_equal_then_(str); }
+
+bool System::Data::String::LessThen(System::Data::String &str) const { return _less_than_(str.__allocated_buffer__); }
+
+bool System::Data::String::LessThen(const char *str) const { return _less_than_(str); }
+
+bool System::Data::String::LessEqualThen(System::Data::String &str) const { return _less_equal_than_(str.__allocated_buffer__); }
+
+bool System::Data::String::LessEqualThen(const char *str) const { return _less_equal_than_(str); }
+
 bool System::Data::String::isUpper(unsigned int pos) const { return _exists_in_the_range_(pos, 0x41, 0x5A); }
 
 bool System::Data::String::isLower(unsigned int pos) const { return _exists_in_the_range_(pos, 0x61, 0x7A); }
@@ -385,6 +409,15 @@ void System::Data::String::Remove(char ch, unsigned int pos)
   }
 }
 
+void System::Data::String::Remove(unsigned int pos, unsigned int pos2)
+{
+  if (pos < __len__ && pos2 < __len__)
+  {
+    for (unsigned int i = pos; i < pos2; i++)
+      Remove(i);
+  }
+}
+
 void System::Data::String::absRemove(char ch)
 {
   char pos = this->Find(ch);
@@ -400,11 +433,50 @@ void System::Data::String::absRemove(char ch)
   __allocated_buffer__ = (char *)realloc(__allocated_buffer__, __len__);
 }
 
-void System::Data::String::Replace(char ch, char ch1)
+void System::Data::String::Replace(char ch, unsigned int pos)
+{
+  if (pos < __len__)
+    __allocated_buffer__[pos] = ch;
+}
+
+void System::Data::String::Replace(char ch, unsigned int pos, unsigned int pos2)
+{
+  if (pos < __len__ && pos2 < __len__)
+  {
+    for (unsigned int i = pos; i < pos2; i++)
+      Replace(ch, i);
+  }
+}
+
+void System::Data::String::absReplace(char ch, char ch1)
 {
   int pos = 0;
   while ((pos = this->Find(ch)) != -1)
     this->__allocated_buffer__[pos] = ch1;
+}
+
+void System::Data::String::Delete()
+{
+  if (__allocated_buffer__)
+  {
+    free(__allocated_buffer__);
+    __allocated_buffer__ = nullptr;
+    __len__ = 0x00;
+  }
+}
+
+bool System::Data::String::New()
+{
+  if (__allocated_buffer__ == nullptr)
+  {
+    char *temp = (char *)calloc(0x01, sizeof(char));
+    if (temp == NULL)
+      return 0x00;
+    temp[0x00] = 0x00;
+    _copy_to_buff_(temp, 0x01);
+    return 0x01;
+  }
+  return 0x00;
 }
 
 char System::Data::String::toChar(unsigned char base)

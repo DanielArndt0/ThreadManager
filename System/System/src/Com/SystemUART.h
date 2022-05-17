@@ -5,7 +5,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "Macros/SystemMacros.h"
-#include "DataTypes/SystemString.h"
+#include "DataTypes/SystemTypes.h"
 
 #define __BUFFER_SIZE__ 64
 
@@ -16,17 +16,23 @@ namespace System
     class UART
     {
     private:
-      unsigned int __uart_status__;
+      static unsigned int __uart_status__;
       UART *__buff__;
+
+    public:
+      static System::Data::Vector<char> __stack__;
 
     protected:
       UART *__uart_send__(unsigned char data);
       UART *__uart_send__(const char *data);
-      unsigned char __uart_receive__(void);
+      static unsigned char __uart_receive__(void);
 
     public:
       void Begin(unsigned int baudRate);
+      unsigned char Available();
+      unsigned long bufferLength();
       void Flush(void);
+      static void BufferManager();
 
       // Send
       UART &operator<<(const char *data);
@@ -40,7 +46,7 @@ namespace System
       UART &operator<<(double data);
 
       // Receive
-      UART &operator>>(unsigned char &data);
+      char operator>>(char &data);
     };
   }
 }

@@ -6,6 +6,7 @@
 #include "DataTypes/SystemLiFo.h"
 #include "DataTypes/SystemFiFo.h"
 #include "DataTypes/SystemDuet.h"
+#include "DataTypes/SystemMap.h"
 
 namespace System
 {

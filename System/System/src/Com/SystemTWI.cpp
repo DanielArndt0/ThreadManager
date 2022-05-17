@@ -3,7 +3,7 @@
 void System::Com::TWI::twi_begin(unsigned long freq)
 {
   TWSR = 0x00;
-  TWBR = ((F_CPU / freq) - 16) / 2;
+  TWBR = ((__SYSTEM_CLOCK / freq) - 16) / 2;
   TWCR = (1 << TWEN);
 }
 

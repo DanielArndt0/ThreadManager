@@ -6,12 +6,11 @@
 
 namespace CoadjutorSystem
 {
-  class TIMER
+  class UART_INT
   {
   public:
-    virtual void Enable() = 0;
-    virtual void Disable() = 0;
-    virtual void Reset() = 0;
-    virtual unsigned char Status() = 0;
+    void RxEnable();
+    void RxDisable();
+    unsigned char RxStatus();
   };
 }

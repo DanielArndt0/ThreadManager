@@ -116,7 +116,7 @@ namespace System
 
       String(const String &cpy);
       String(const String &&move);
-      ~String(void);
+      ~String();
 
       /******************************************************/
       /**************** Convert Constructors ****************/
@@ -134,7 +134,7 @@ namespace System
 
     public:
       /*****************************************************/
-      /**************** String Manipulation ****************/
+      /****************** String Checking ******************/
       /*****************************************************/
 
       /**
@@ -173,7 +173,7 @@ namespace System
       int Find(char ch) const;
 
       /**
-       * @brief Find the character position in the string from one position.
+       * @brief Find the character position in the string from the given position.
        *
        * @param ch Character to be found.
        *
@@ -182,6 +182,30 @@ namespace System
        * @return Returns the position of the character found. Returns -1 if not found.
        */
       int Find(char ch, unsigned int pos) const;
+
+      bool Equals(String &str) const;
+
+      bool Equals(const char *str) const;
+
+      bool Different(String &str) const;
+
+      bool Different(const char *str) const;
+
+      bool BiggerThen(String &str) const;
+
+      bool BiggerThen(const char *str) const;
+
+      bool BiggerEqualThen(String &str) const;
+
+      bool BiggerEqualThen(const char *str) const;
+
+      bool LessThen(String &str) const;
+
+      bool LessThen(const char *str) const;
+
+      bool LessEqualThen(String &str) const;
+
+      bool LessEqualThen(const char *str) const;
 
       /**
        * @brief Check if character is in Uppercase.
@@ -246,6 +270,10 @@ namespace System
        */
       bool isControl(unsigned int pos) const;
 
+      /*****************************************************/
+      /**************** String Manipulation ****************/
+      /*****************************************************/
+
       /**
        * @brief Convert character to uppercase.
        *
@@ -294,11 +322,38 @@ namespace System
       void Remove(unsigned int pos);
 
       /**
+       * @brief Remove characters in a given position range.
+       *
+       * @param pos Character position in the string.
+       *
+       * @param pos2 Character position in the string.
+       */
+      void Remove(unsigned int pos, unsigned int pos2);
+
+      /**
        * @brief Remove the character from all positions where it was found.
        *
        * @param ch Character to be removed.
        */
       void absRemove(char ch);
+
+      /**
+       * @brief Replaces the given character at a given position.
+       *
+       * @param ch Character to be replaced.
+       *
+       * @param ch1 New character.
+       */
+      void Replace(char ch, unsigned int pos);
+
+      /**
+       * @brief Replace all characters found in the character with the new character given in a given range.
+       *
+       * @param pos Character position in the string.
+       *
+       * @param pos2 Character position in the string.
+       */
+      void Replace(char ch, unsigned int pos, unsigned int pos2);
 
       /**
        * @brief Replace at all found character the character with the new given character.
@@ -307,7 +362,17 @@ namespace System
        *
        * @param ch1 New character.
        */
-      void Replace(char ch, char ch1);
+      void absReplace(char ch, char ch1);
+
+      /**
+       * @brief Allocate the memory buffer if the string has been deleted.
+       */
+      bool New();
+
+      /**
+       * @brief Erase the string and free the memory.
+       */
+      void Delete();
 
       /*********************************************/
       /**************** Conversions ****************/
