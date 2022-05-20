@@ -105,22 +105,14 @@ System::Memory::EEPROM eeprom;
 System::Memory::RAM ram;
 System::Addons::OLED Display(WIDTH, HEIGHT, __DSP_ADDR);
 
+
 int main(void)
 {
   Clock.Begin();
   Serial.Begin(9600);
 
-  Serial << "Free RAM: " << ram.freeRAM() << endl;
-
-  String str = "Testando";
-
   while (1)
   {
-    str = String("Opa ") + String(" testando");
-
-    Serial << str << ram.freeRAM() << endl;
-    Serial << "Free RAM: " << ram.freeRAM() << endl;
-    Clock.Pause(600);
   }
 
   return 0;

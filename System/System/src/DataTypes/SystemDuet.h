@@ -10,27 +10,25 @@ namespace System
     public:
       void operator=(Duet &cpy)
       {
-        this->__data1__ = cpy.__data1__;
-        this->__data2__ = cpy.__data2__;
+        this->__key__ = cpy.__key__;
+        this->__value__ = cpy.__value__;
       }
 
       void operator=(Duet &&move)
       {
-        this->__data1__ = move.__data1__;
-        this->__data2__ = move.__data2__;
+        this->__key__ = move.__key__;
+        this->__value__ = move.__value__;
       }
 
     private:
-      T1 __data1__;
-      T2 __data2__;
+      T1 __key__;
+      T2 __value__;
 
     public:
       Duet() {}
       Duet(Duet &cpy) { *this = cpy; }
       Duet(Duet &&move) { *this = move; }
-      Duet(T1 data1, T2 data2) : __data1__(data1), __data2__(data2) {}
-      Duet(T1 data) : __data1__(data) {}
-      Duet(T2 data) : __data2__(data) {}
+      Duet(T1 key, T2 value) : __key__(key), __value__(value) {}
 
     public:
       /**
@@ -38,28 +36,28 @@ namespace System
        *
        * @return Returns first object.
        */
-      T1 &getFirst() { return __data1__; }
+      T1 &getFirst() { return __key__; }
 
       /**
        * @brief Set first value of the Duet.
        *
        * @param data Data to be defined.
        */
-      void setFirst(T1 data) { __data1__ = data; }
+      void setFirst(T1 data) { __key__ = data; }
 
       /**
        * @brief Get the second value of the Duet.
        *
        * @return Returns second object.
        */
-      T2 &getSecond() { return __data2__; }
+      T2 &getSecond() { return __value__; }
 
       /**
        * @brief Set second value of the Duet.
        *
        * @param data Data to be defined.
        */
-      void setSecond(T2 data) { __data2__ = data; }
+      void setSecond(T2 data) { __value__ = data; }
 
       /**
        * @brief Set the Duet.
@@ -70,16 +68,16 @@ namespace System
        */
       void setDuet(T1 d1, T2 d2)
       {
-        __data1__ = d1;
-        __data2__ = d2;
+        __key__ = d1;
+        __value__ = d2;
       }
 
       /**
        * @brief Create a new duet.
        *
-       * @param d1 Data to be defined in first value.
+       * @param d1 Key to be defined.
        *
-       * @param d2 Data to be defined in second value.
+       * @param d2 Value to be defined.
        *
        * @return Return a new duet with set values.
        */

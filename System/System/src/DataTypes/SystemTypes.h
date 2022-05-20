@@ -7,8 +7,7 @@
 #include "DataTypes/SystemFiFo.h"
 #include "DataTypes/SystemDuet.h"
 #include "DataTypes/SystemMap.h"
-
-namespace System
-{
-  typedef void StdThread(void);
-}
+#include "DataTypes/SystemList.h"
+#include "DataTypes/SystemLinkedList.h"
+#include "DataTypes/SystemArrayList.h"
+#include "DataTypes/SystemTypedefs.h"
