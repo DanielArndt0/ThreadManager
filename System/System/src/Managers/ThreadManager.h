@@ -21,10 +21,10 @@ namespace System
       static Data::Vector<CoadjutorSystem::Thread> __thread_stack__;
 
     private:
-      static bool _check_existing_address_(System::StdThread *thread);
+      static bool _check_existing_address_(Data::StdThread *thread);
       //----------
       static void _begin_();
-      static bool _create_thread_(StdThread *thread, Data::String threadName, unsigned long intermittenceTime);
+      static bool _create_thread_(Data::StdThread *thread, Data::String threadName, unsigned long intermittenceTime);
       static void _manager_();
       //----------
       static void _enable_manager_();
@@ -32,31 +32,31 @@ namespace System
       static void _delete_manager_();
       //----------
       static bool _execute_thread_(unsigned int ThreadNumber);
-      static bool _execute_thread_(StdThread *addr_Thread);
+      static bool _execute_thread_(Data::StdThread *addr_Thread);
       //----
       static bool _pause_thread_(unsigned int ThreadNumber);
-      static bool _pause_thread_(StdThread *addr_Thread);
+      static bool _pause_thread_(Data::StdThread *addr_Thread);
       //----
       static bool _resume_thread_(unsigned int ThreadNumber);
-      static bool _resume_thread_(StdThread *addr_Thread);
+      static bool _resume_thread_(Data::StdThread *addr_Thread);
       //----
       static bool _delete_thread_(unsigned int ThreadNumber);
-      static bool _delete_thread_(StdThread *addr_Thread);
+      static bool _delete_thread_(Data::StdThread *addr_Thread);
       //----
       static bool _change_intermittence_time_(unsigned int ThreadNumber, unsigned long intermittenceTime);
-      static bool _change_intermittence_time_(StdThread *addr_Thread, unsigned long intermittenceTime);
+      static bool _change_intermittence_time_(Data::StdThread *addr_Thread, unsigned long intermittenceTime);
       //----------
-      static StdThread *_get_thread_addr_(unsigned int ThreadNumber);
-      static int _get_thread_number_(StdThread *addr_Thread);
+      static Data::StdThread *_get_thread_addr_(unsigned int ThreadNumber);
+      static int _get_thread_number_(Data::StdThread *addr_Thread);
       //----
       static bool _get_thread_status_(unsigned int ThreadNumber);
-      static bool _get_thread_status_(StdThread *addr_Thread);
+      static bool _get_thread_status_(Data::StdThread *addr_Thread);
       //----
       static Data::String _get_thread_name_(unsigned int ThreadNumber);
-      static Data::String _get_thread_name_(StdThread *addr_Thread);
+      static Data::String _get_thread_name_(Data::StdThread *addr_Thread);
       //----
       static unsigned long _get_intermittence_time_(unsigned int ThreadNumber);
-      static unsigned long _get_intermittence_time_(StdThread *addr_Thread);
+      static unsigned long _get_intermittence_time_(Data::StdThread *addr_Thread);
       //----
       static unsigned char _get_manager_status_();
       static unsigned int _get_total_threads_();
@@ -70,7 +70,7 @@ namespace System
 
     public:
       static void Begin();
-      static bool Create(StdThread *thread, Data::String threadName, unsigned long intermittenceTime);
+      static bool Create(Data::StdThread *thread, Data::String threadName, unsigned long intermittenceTime);
       static void Manager();
       static void EnableManager();
       static void DisableManager();
@@ -78,31 +78,31 @@ namespace System
 
     public:
       static bool Execute(unsigned int ThreadNumber);
-      static bool Execute(StdThread *addr_Thread);
+      static bool Execute(Data::StdThread *addr_Thread);
 
       static bool Pause(unsigned int ThreadNumber);
-      static bool Pause(StdThread *addr_Thread);
+      static bool Pause(Data::StdThread *addr_Thread);
 
       static bool Resume(unsigned int ThreadNumber);
-      static bool Resume(StdThread *addr_Thread);
+      static bool Resume(Data::StdThread *addr_Thread);
 
       static bool Delete(unsigned int ThreadNumber);
-      static bool Delete(StdThread *addr_Thread);
+      static bool Delete(Data::StdThread *addr_Thread);
 
       static void changeTime(unsigned int ThreadNumber, unsigned long intermittenceTime);
-      static void changeTime(StdThread *addr_Thread, unsigned long intermittenceTime);
+      static void changeTime(Data::StdThread *addr_Thread, unsigned long intermittenceTime);
 
-      static StdThread *getAddress(unsigned int ThreadNumber);
-      static int getNumber(StdThread *addr_Thread);
+      static Data::StdThread *getAddress(unsigned int ThreadNumber);
+      static int getNumber(Data::StdThread *addr_Thread);
 
       static bool getThreadStatus(unsigned int ThreadNumber);
-      static bool getThreadStatus(StdThread *addr_Thread);
+      static bool getThreadStatus(Data::StdThread *addr_Thread);
 
       static Data::String getName(unsigned int ThreadNumber);
-      static Data::String getName(StdThread *addr_Thread);
+      static Data::String getName(Data::StdThread *addr_Thread);
 
       static unsigned long getTime(unsigned int ThreadNumber);
-      static unsigned long getTime(StdThread *addr_Thread);
+      static unsigned long getTime(Data::StdThread *addr_Thread);
 
       static unsigned char getManagerStatus();
       static unsigned int getTotalThreads();

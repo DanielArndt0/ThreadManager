@@ -105,11 +105,12 @@ System::Memory::EEPROM eeprom;
 System::Memory::RAM ram;
 System::Addons::OLED Display(WIDTH, HEIGHT, __DSP_ADDR);
 
-
 int main(void)
 {
   Clock.Begin();
   Serial.Begin(9600);
+  
+
 
   while (1)
   {

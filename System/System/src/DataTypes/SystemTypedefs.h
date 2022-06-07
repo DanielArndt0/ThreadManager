@@ -2,6 +2,9 @@
 
 namespace System
 {
-  typedef void StdThread(void);
-  typedef unsigned long index;
+  namespace Data
+  {
+    typedef void StdThread(void);
+    typedef unsigned long Index;
+  }
 }

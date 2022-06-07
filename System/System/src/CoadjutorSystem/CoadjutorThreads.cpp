@@ -27,7 +27,7 @@ void CoadjutorSystem::Thread::_set_intermittence_time_(unsigned long intermitten
   __intermittenceTime__ = intermittenceTime;
 }
 
-bool CoadjutorSystem::Thread::_set_address_(System::StdThread *address)
+bool CoadjutorSystem::Thread::_set_address_(System::Data::StdThread *address)
 {
   if (__address__ != NULL || address == NULL)
     return __FALSE;
@@ -39,7 +39,7 @@ System::Data::String CoadjutorSystem::Thread::_get_name_() const { return __name
 
 unsigned long CoadjutorSystem::Thread::_get_intermittence_time_() const { return __intermittenceTime__; }
 
-System::StdThread *CoadjutorSystem::Thread::_get_address_() const { return __address__; }
+System::Data::StdThread *CoadjutorSystem::Thread::_get_address_() const { return __address__; }
 
 bool CoadjutorSystem::Thread::_get_status_() const { return __status__; }
 
@@ -86,7 +86,7 @@ bool CoadjutorSystem::Thread::_delete_()
 
 CoadjutorSystem::Thread::Thread() {}
 
-CoadjutorSystem::Thread::Thread(System::StdThread *thread, System::Data::String threadName, unsigned long intermittenceTime) : __address__(thread), __name__(threadName), __intermittenceTime__(intermittenceTime) {}
+CoadjutorSystem::Thread::Thread(System::Data::StdThread *thread, System::Data::String threadName, unsigned long intermittenceTime) : __address__(thread), __name__(threadName), __intermittenceTime__(intermittenceTime) {}
 
 CoadjutorSystem::Thread::Thread(CoadjutorSystem::Thread &cpy) { *this = cpy; }
 
@@ -96,13 +96,13 @@ void CoadjutorSystem::Thread::setName(System::Data::String name) { _set_name_(na
 
 void CoadjutorSystem::Thread::setIntermittenceTime(unsigned long intermittenceTime) { _set_intermittence_time_(intermittenceTime); }
 
-bool CoadjutorSystem::Thread::setAddress(System::StdThread *address) { return _set_address_(address); }
+bool CoadjutorSystem::Thread::setAddress(System::Data::StdThread *address) { return _set_address_(address); }
 
 System::Data::String CoadjutorSystem::Thread::getName() const { return _get_name_(); }
 
 unsigned long CoadjutorSystem::Thread::getIntermittenceTime() const { return _get_intermittence_time_(); }
 
-System::StdThread *CoadjutorSystem::Thread::getAddress() const { return _get_address_(); }
+System::Data::StdThread *CoadjutorSystem::Thread::getAddress() const { return _get_address_(); }
 
 bool CoadjutorSystem::Thread::getStatus() const { return _get_status_(); }
 
